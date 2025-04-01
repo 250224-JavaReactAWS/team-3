@@ -1,7 +1,7 @@
 package com.revature.models;
 
 import jakarta.persistence.*;
-
+import java.util.List;
 @Entity
 public class Room {
 
@@ -29,12 +29,15 @@ public class Room {
   @JoinColumn(name = "hotel_id")
   private Hotel hotel;
 
+  @ManyToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
+  private List<Reservation> reservations;
+
   public Room() {}
 
-  public Room(int roomId, RoomType type, int beeds, int baths, double price, boolean isAvailable, Hotel hotel) {
+  public Room(int roomId, RoomType type, int beds, int baths, double price, boolean isAvailable, Hotel hotel) {
     this.roomId = roomId;
     this.type = type;
-    this.beds = beeds;
+    this.beds = beds;
     this.baths = baths;
     this.price = price;
     this.isAvailable = isAvailable;
@@ -104,5 +107,13 @@ public class Room {
 
   public void setHotel(Hotel hotel) {
     this.hotel = hotel;
+  }
+
+  public List<Reservation> getReservations() {
+    return reservations;
+  }
+
+  public void setReservations(List<Reservation> reservations) {
+    this.reservations = reservations;
   }
 }
