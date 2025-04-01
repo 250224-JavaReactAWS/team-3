@@ -1,6 +1,6 @@
 package com.revature.models;
 
-public enum Role {
+public enum UserRole {
   CUSTOMER,
   OWNER
 }

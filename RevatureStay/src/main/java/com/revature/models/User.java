@@ -2,6 +2,8 @@ package com.revature.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -22,25 +24,54 @@ public class User {
   private String password;
 
   @Enumerated(value = EnumType.STRING)
-  private Role role;
+  private UserRole userRole;
+
+  //Relationships
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Reservation> reservations;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Review> reviews;
+
+  @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Hotel> ownerHotels;
+
+  @ManyToMany
+  @JoinTable(
+          name = "favorites",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "hotel_id")
+  )
+  private List<Hotel> hotels;
 
   public User() {}
 
-  public User(int userId, String firstName, String lastName, String email, String password, Role role) {
+  public User(int userId, String firstName, String lastName,
+              String email, String password, UserRole userRole, List<Reservation> reservations,
+              List<Review> reviews, List<Hotel> hotels, List<Hotel> ownerHotels) {
     this.userId = userId;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
-    this.role = role;
+    this.userRole = userRole;
+    this.reservations = reservations;
+    this.reviews = reviews;
+    this.hotels = hotels;
+    this.ownerHotels = ownerHotels;
   }
 
-  public User(String firstName, String lastName, String email, String password, Role role) {
+  public User(String firstName, String lastName, String email, String password, UserRole userRole, List<Reservation> reservations,
+              List<Review> reviews, List<Hotel> hotels, List<Hotel> ownerHotels) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
-    this.role = role;
+    this.userRole = userRole;
+    this.reservations = reservations;
+    this.reviews = reviews;
+    this.hotels = hotels;
+    this.ownerHotels = ownerHotels;
   }
 
   public int getUserId() {
@@ -83,11 +114,43 @@ public class User {
     this.password = password;
   }
 
-  public Role getRole() {
-    return role;
+  public UserRole getRole() {
+    return userRole;
   }
 
-  public void setRole(Role role) {
-    this.role = role;
+  public void setRole(UserRole userRole) {
+    this.userRole = userRole;
+  }
+
+  public List<Reservation> getReservations() {
+    return reservations;
+  }
+
+  public void setReservations(List<Reservation> reservations) {
+    this.reservations = reservations;
+  }
+
+  public List<Review> getReviews() {
+    return reviews;
+  }
+
+  public void setReviews(List<Review> reviews) {
+    this.reviews = reviews;
+  }
+
+  public List<Hotel> getOwnerHotels() {
+    return ownerHotels;
+  }
+
+  public void setOwnerHotels(List<Hotel> ownerHotels) {
+    this.ownerHotels = ownerHotels;
+  }
+
+  public List<Hotel> getHotels() {
+    return hotels;
+  }
+
+  public void setHotels(List<Hotel> hotels) {
+    this.hotels = hotels;
   }
 }
