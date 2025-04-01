@@ -1,0 +1,128 @@
+/////User account managing//////
+POST:  /users/register
+{
+    "firstName" : "",
+    "lastName" : "",
+    "email", : "",
+    "password" : "",
+}
+
+POST:  /users/login
+{
+    "email":"",
+    "password":""
+}
+
+
+////// Hotel searching and view//////
+GET:   /hotels
+[
+    {
+        "hotelId": "",
+        "name" : "",
+        "address" : "",
+        "pricing" : "",
+        "amenities" : [
+            {
+                "amenitieId" : "",
+                "description" : ""
+            }
+        ]
+    }
+]
+
+GET:     /hotels/{id}
+{
+    {
+        "hotelId": "",
+        "name" : "",
+        "address" : "",
+        "amenities" : [
+            {
+                "amenitieId" : "",
+                "description" : ""
+            }
+        ],
+        "rooms" : [
+            {
+                "roomId" : "",
+                "floor" : "",
+                "type: : "",
+                "price" : ""
+            }
+        ],
+        "images" : [
+            {
+                "imageId" : "",
+                "src" : "",
+                "description"
+            }
+        ]
+    }
+}
+
+/////reservations managing/////
+
+POST:   /reservations
+{
+    "hotelId" : "",
+    "checkIn" : "",
+    "checkOut" : "",
+    "roomId" : "",
+    "numberOfGuests": ""
+}
+
+GET:    /reservations
+[
+    {
+        "reservationId":"",
+        "userId" : "",
+        "hotelId" : "",
+        "checkIn" : "",
+        "checkOut" : "",
+        "roomId" : "",
+        "numberOfGuests": ""
+    }
+]
+
+GET:   /reservations/{id}
+{
+    "reservationId":"",
+    "user" : {
+        "firstName" : "",
+        "lastName" : "",
+        "email", : "",
+    },
+    "hotel" : {
+        "hotelId": "",
+        "name" : "",
+        "address" : "",
+        "pricing" : "",
+        "amenities" : [
+            {
+                "amenitieId" : "",
+                "description" : ""
+            }
+        ]
+    },
+    "checkIn" : "",
+    "checkOut" : "",
+    "room" : {
+        "roomId" : "",
+        "floor" : "",
+        "type: : "",
+        "price" : ""
+    },
+    "numberOfGuests": ""
+}
+
+POST:   /reservations/{id}
+{
+    "hotelId" : "",
+    "checkIn" : "",
+    "checkOut" : "",
+    "roomType" : "",
+    "numberOfGuests": ""
+}
+
+DELETE:   /reservations/{id}
