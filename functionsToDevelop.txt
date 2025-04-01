@@ -1,0 +1,17 @@
+User Service -> Criss
+As a user, I want to register on the platform so that I can make bookings. (MVP) -> User Service
+As a user, I want to log in using my email/username and password so that I can access my account. (MVP) -> User Service
+As a hotel owner, I want to log in using my email and password so that I can access my dashboard. (MVP) -> User Service
+As a hotel owner, I want to register as a seller with email, password, and business details so that I can list my properties. (MVP) -> User Service
+
+Reservation Service -> Edher
+As a user, I want to make hotel reservations by selecting check-in and check-out dates, room type, and number of guests. (MVP) -> Reservation Service
+As a user, I want to view and manage my bookings, including modifying or canceling reservations. (MVP) -> Reservation Service
+As a hotel owner, I want to view and manage reservations, including accepting or rejecting bookings. (MVP) -> Reservation Service
+
+Room Service -> Uriel
+As a hotel owner, I want to manage room inventory and availability. (MVP) -> Room Service
+
+Hotel Service -> Uriel
+As a hotel owner, I want to manage hotel listings and details, including images, descriptions, pricing, and availability. (MVP) -> Hotel Service
+As a user, I want to search and view hotel details including images, location, price, amenities, and user reviews. (MVP) -> Hotel Service and Image Service 
