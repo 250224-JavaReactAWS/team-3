@@ -2,7 +2,7 @@ package com.revature.models;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -15,10 +15,10 @@ public class Reservation {
   private int reservationId;
 
   @Column
-  private Date checkInDate;
+  private LocalDate checkInDate;
 
   @Column
-  private Date checkOutDate;
+  private LocalDate checkOutDate;
 
   @Column
   private int numGuests;
@@ -46,7 +46,7 @@ public class Reservation {
 
   public Reservation() {}
 
-  public Reservation(int reservationId, Date checkInDate, Date checkOutDate, int numGuests,
+  public Reservation(int reservationId, LocalDate checkInDate, LocalDate checkOutDate, int numGuests,
                      ReservationStatus status, User user, Hotel hotel, List<Room> rooms) {
     this.reservationId = reservationId;
     this.checkInDate = checkInDate;
@@ -58,7 +58,7 @@ public class Reservation {
     this.rooms = rooms;
   }
 
-  public Reservation(Date checkInDate, Date checkOutDate, int numGuests, ReservationStatus status,
+  public Reservation(LocalDate checkInDate, LocalDate checkOutDate, int numGuests, ReservationStatus status,
                      User user, Hotel hotel, List<Room> rooms) {
     this.checkInDate = checkInDate;
     this.checkOutDate = checkOutDate;
@@ -77,19 +77,19 @@ public class Reservation {
     this.reservationId = reservationId;
   }
 
-  public Date getCheckInDate() {
+  public LocalDate getCheckInDate() {
     return checkInDate;
   }
 
-  public void setCheckInDate(Date checkInDate) {
+  public void setCheckInDate(LocalDate checkInDate) {
     this.checkInDate = checkInDate;
   }
 
-  public Date getCheckOutDate() {
+  public LocalDate getCheckOutDate() {
     return checkOutDate;
   }
 
-  public void setCheckOutDate(Date checkOutDate) {
+  public void setCheckOutDate(LocalDate checkOutDate) {
     this.checkOutDate = checkOutDate;
   }
 
