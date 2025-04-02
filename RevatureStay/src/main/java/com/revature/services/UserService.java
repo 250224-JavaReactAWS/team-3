@@ -1,6 +1,6 @@
 package com.revature.services;
 
-import com.revature.exceptions.*;
+import com.revature.exceptions.custom.user.*;
 import com.revature.models.User;
 import com.revature.repos.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +24,11 @@ public class UserService {
     Optional<User> user = userDAO.findUserByEmail(newUser.getEmail());
 
     if (user.isPresent()) {
-      throw new EmailAlreadyRegisteredException("Exist an account with that email. " + newUser.getEmail());
+      throw new EmailAlreadyRegisteredException("There is an account with that email address.");
     }
 
     if (!newUser.getEmail().matches(EMAIL_REGEX)) {
-      throw new InvalidEmailFormatException("Your email is invalid. An example of valid email is: exampleEmail1@domain.com ");
+      throw new InvalidEmailFormatException("Your email is invalid. An example of valid email is: exampleEmail1@domain.com");
     }
 
     if (!newUser.getPassword().matches(PASSWORD_REGEX)) {
@@ -45,7 +45,7 @@ public class UserService {
     User userToLogin;
 
     if (user.isEmpty()) {
-      throw new WrongEmailException("We can´t find an account with that email");
+      throw new WrongEmailException("There is no account with that email address.");
     } else {
       userToLogin = user.get();
     }

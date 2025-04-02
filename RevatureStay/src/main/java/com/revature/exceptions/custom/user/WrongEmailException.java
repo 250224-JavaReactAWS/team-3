@@ -1,4 +1,4 @@
-package com.revature.exceptions;
+package com.revature.exceptions.custom.user;
 
 public class WrongEmailException extends RuntimeException {
   public WrongEmailException(String message) {
