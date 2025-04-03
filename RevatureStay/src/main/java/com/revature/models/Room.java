@@ -2,6 +2,8 @@ package com.revature.models;
 
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.Objects;
+
 @Entity
 public class Room {
 
@@ -115,5 +117,17 @@ public class Room {
 
   public void setReservations(List<Reservation> reservations) {
     this.reservations = reservations;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    Room room = (Room) o;
+    return roomId == room.roomId;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(roomId);
   }
 }
