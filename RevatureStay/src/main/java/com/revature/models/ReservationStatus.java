@@ -2,5 +2,7 @@ package com.revature.models;
 
 public enum ReservationStatus {
   PENDING,
-  PAID
+  ACCEPTED,
+  REJECTED,
+  FINALIZED
 }
