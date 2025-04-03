@@ -29,7 +29,7 @@ public class ReservationServices {
     }
 
     public Reservation makeReservation(Reservation reservationToBeMade){
-        User user = findUser(reservationToBeMade);
+        User user = findUser(reservationToBeMade.getUser().getUserId());
         Hotel hotel = findHotel(reservationToBeMade);
         validateReservationDates(reservationToBeMade.getCheckInDate(), reservationToBeMade.getCheckOutDate());
         List<Room> rooms = findRoomsForReservation(reservationToBeMade, hotel.getRooms());
@@ -39,8 +39,13 @@ public class ReservationServices {
         return reservationDAO.save(reservationToBeMade);
     }
 
-    private User findUser(Reservation reservation){
-        Optional<User> user = usersDAO.findById(reservation.getUser().getUserId());
+    public List<Reservation> viewMyReservations(int userId){
+        User user = findUser(userId);
+        return user.getReservations();
+    }
+
+    private User findUser(int userID){
+        Optional<User> user = usersDAO.findById(userID);
         if(user.isEmpty()){
             throw new ResourceNotFoundException("User not found");
         }
@@ -97,7 +102,7 @@ public class ReservationServices {
     private boolean roomIsAvailable(Room room, LocalDate checking, LocalDate checkout){
         List<Reservation> reservations = room.getReservations();
         for(Reservation reservation : reservations){
-            if(reservationHasConflictWithDates(reservation, checking, checkout)){
+            if(reservationHasConflictWithDates(reservation, checking, checkout) && reservationIsAccepted(reservation)){
                 return false;
             }
         }
@@ -107,5 +112,8 @@ public class ReservationServices {
         LocalDate reservationChecking = reservation.getCheckInDate();
         LocalDate reservationCheckout = reservation.getCheckOutDate();
         return !(checkout.equals(reservationChecking) || checking.equals(reservationCheckout) || checkout.isBefore(reservationChecking) || checking.isAfter(reservationCheckout));
+    }
+    private boolean reservationIsAccepted(Reservation reservation){
+        return reservation.getStatus().equals(ReservationStatus.ACCEPTED);
     }
 }

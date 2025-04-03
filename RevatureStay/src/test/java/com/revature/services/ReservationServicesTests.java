@@ -39,10 +39,10 @@ public class ReservationServicesTests {
     private User mockedUser;
     private Hotel mockedHotel;
 
+    private final LocalDate checking = LocalDate.of(2025, 11, 9);
+    private final LocalDate checkout = LocalDate.of(2025, 11, 10);
     @BeforeEach
     public void setUp(){
-        LocalDate checking = LocalDate.of(2025, 11, 9);
-        LocalDate checkout = LocalDate.of(2025, 11, 10);
         int guests = 2;
         mockedUser = new User();
         mockedUser.setUserId(1);
@@ -103,22 +103,29 @@ public class ReservationServicesTests {
            reservationServices.makeReservation(reservationToTest);
         });
     }
-//    @Test
-//    public void viewMyReservationsShouldReturnAListOfReservations(){
-//        assertInstanceOf(Li)
-//        reservationServices.viewMyReservations()
-//    }
+
 
     private List<Room> createListOfRooms(){
         Reservation reservation1 = new Reservation();
-        reservation1.setCheckInDate(LocalDate.of(2025, 11, 5));
-        reservation1.setCheckOutDate(LocalDate.of(2025, 11, 9));
+        reservation1.setCheckInDate(checking.minusDays(4));
+        reservation1.setCheckOutDate(checking);
+        reservation1.setStatus(ReservationStatus.ACCEPTED);
         Reservation reservation2 = new Reservation();
-        reservation2.setCheckInDate(LocalDate.of(2025, 11, 8));
-        reservation2.setCheckOutDate(LocalDate.of(2025, 11, 10));
+        reservation2.setCheckInDate(checking.minusDays(1));
+        reservation2.setCheckOutDate(checkout);
+        reservation2.setStatus(ReservationStatus.ACCEPTED);
         Reservation reservation3 = new Reservation();
-        reservation3.setCheckInDate(LocalDate.of(2025, 11, 10));
-        reservation3.setCheckOutDate(LocalDate.of(2025, 11, 13));
+        reservation3.setCheckInDate(checkout);
+        reservation3.setCheckOutDate(checkout.plusDays(2));
+        reservation3.setStatus(ReservationStatus.ACCEPTED);
+        Reservation reservation4 = new Reservation();
+        reservation4.setCheckInDate(checking);
+        reservation4.setCheckOutDate(checkout);
+        reservation4.setStatus(ReservationStatus.PENDING);
+        Reservation reservation5 = new Reservation();
+        reservation5.setCheckInDate(checking);
+        reservation5.setCheckOutDate(checkout);
+        reservation5.setStatus(ReservationStatus.REJECTED);
         Room room1 = new Room();
         Room room2 = new Room();
         Room room3 = new Room();
@@ -131,7 +138,7 @@ public class ReservationServicesTests {
         room2.setReservations(List.of(reservation2));
         room3.setRoomId(3);
         room3.setType(RoomType.SUITE);
-        room3.setReservations(List.of());
+        room3.setReservations(List.of(reservation4, reservation5));
         room4.setRoomId(4);
         room4.setType(RoomType.TRIPLE);
         room4.setReservations(List.of());
