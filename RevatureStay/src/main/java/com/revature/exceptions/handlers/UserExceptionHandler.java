@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class UserExceptionHandler {
-
   @ExceptionHandler(EmailAlreadyRegisteredException.class)
   public ResponseEntity<Map<String, String>> handleEmailAlreadyRegisteredException(EmailAlreadyRegisteredException e) {
     return ExceptionResponseBuilder.buildResponse(e.getMessage(), HttpStatus.CONFLICT);
