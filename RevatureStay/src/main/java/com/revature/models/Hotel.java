@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="hotels")
@@ -162,5 +163,17 @@ public class Hotel {
 
   public void setUsers(List<User> users) {
     this.users = users;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    Hotel hotel = (Hotel) o;
+    return hotelId == hotel.hotelId;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(hotelId);
   }
 }
