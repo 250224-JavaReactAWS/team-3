@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.exceptions.custom.reservation.ForbbidenOperationException;
 import com.revature.exceptions.custom.reservation.InvalidDatesException;
 import com.revature.exceptions.custom.reservation.ResourceNotFoundException;
 import com.revature.exceptions.custom.reservation.RoomNotAvailableException;
@@ -28,8 +29,8 @@ public class ReservationServices {
         this.usersDAO = usersDAO;
     }
 
-    public Reservation makeReservation(Reservation reservationToBeMade){
-        User user = findUser(reservationToBeMade.getUser().getUserId());
+    public Reservation makeReservation(Reservation reservationToBeMade, int userId){
+        User user = findUser(userId);
         Hotel hotel = findHotel(reservationToBeMade);
         validateReservationDates(reservationToBeMade.getCheckInDate(), reservationToBeMade.getCheckOutDate());
         List<Room> rooms = findRoomsForReservation(reservationToBeMade, hotel.getRooms());
@@ -42,6 +43,68 @@ public class ReservationServices {
     public List<Reservation> viewMyReservations(int userId){
         User user = findUser(userId);
         return user.getReservations();
+    }
+
+    public Reservation updateReservation(Reservation reservation, int userId){
+        User user = findUser(userId);
+        Reservation storedReservation = findReservation(reservation.getReservationId());
+        validateThatReservationBelongsToUser(storedReservation, userId);
+        Hotel hotel = storedReservation.getHotel();
+        if(datesOfReservationNeedToBeUpdated(reservation)){
+            validateReservationDates(reservation.getCheckInDate(), reservation.getCheckOutDate());
+            storedReservation.setCheckInDate(reservation.getCheckInDate());
+            storedReservation.setCheckOutDate(reservation.getCheckOutDate());
+            List<Room> availableRooms = findRoomsForReservation(storedReservation,hotel.getRooms());
+            storedReservation.setRooms(availableRooms);
+        }
+        if(reservation.getNumGuests()>0){
+            storedReservation.setNumGuests(reservation.getNumGuests());
+        }
+        return reservationDAO.save(storedReservation);
+    }
+
+    public List<Room> deleteRoomFromReservation(int userId, int reservationId, int roomId){
+        User user = findUser(userId);
+        Reservation reservation = findReservation(reservationId);
+        validateThatReservationBelongsToUser(reservation, userId);
+        List<Room> newRooms = reservation.getRooms().stream().filter(room -> room.getRoomId() != roomId).toList();
+        reservation.setRooms(newRooms);
+        return reservationDAO.save(reservation).getRooms();
+    }
+
+    public List<Room> addRoomToReservation(int userId, int reservationId, Room room){
+        User user = findUser(userId);
+        Reservation reservation = findReservation(reservationId);
+        validateThatReservationBelongsToUser(reservation, userId);
+        List<Room> roomsOfSameType = findRoomsOfType(room.getType(), reservation.getHotel().getRooms());
+        Optional<Room> availableRoom = findAvailableRoom(reservation.getCheckInDate(), reservation.getCheckOutDate(), roomsOfSameType);
+        if(availableRoom.isEmpty()){
+            throw new RoomNotAvailableException("No available room found for the type: " + room.getType().toString());
+        }
+        List<Room> rooms = new ArrayList<>(reservation.getRooms());
+        rooms.add(availableRoom.get());
+        reservation.setRooms(rooms);
+        return reservationDAO.save(reservation).getRooms();
+    }
+
+    public Reservation updateReservationStatus(int userId, Reservation reservation){
+        User user = findUser(userId);
+        Reservation savedReservation = findReservation(reservation.getReservationId());
+        if(user.getRole().equals(UserRole.CUSTOMER)){
+            validateThatReservationBelongsToUser(savedReservation, userId);
+            if(!reservation.getStatus().equals(ReservationStatus.CANCELLED)){
+                throw new ForbbidenOperationException("You can not set the status "+ reservation.getStatus() + " on this reservation");
+            }
+        }else{
+            List<Hotel> userHotels = user.getOwnerHotels();
+            Hotel reservationHotel = savedReservation.getHotel();
+            if(!userHotels.contains(reservationHotel)){
+                throw new ForbbidenOperationException("This reservation does not belong to any of your hotels");
+            }
+        }
+
+        savedReservation.setStatus(reservation.getStatus());
+        return reservationDAO.save(savedReservation);
     }
 
     private User findUser(int userID){
@@ -60,6 +123,14 @@ public class ReservationServices {
         return hotel.get();
     }
 
+    private Reservation findReservation(int reservationId){
+        Optional<Reservation> reservation = reservationDAO.findById(reservationId);
+        if(reservation.isEmpty()){
+            throw new ResourceNotFoundException("Reservation not found");
+        }
+        return reservation.get();
+    }
+
     private void validateReservationDates(LocalDate checkIn, LocalDate checkOut){
         LocalDate now = LocalDate.now();
         if (checkIn.isAfter(checkOut)) {
@@ -73,6 +144,9 @@ public class ReservationServices {
     private List<Room> findRoomsForReservation(Reservation reservation, List<Room> inventory){
         List<Room> mutableInventory = new ArrayList<>(inventory);
         List<Room> foundRooms = new ArrayList<>();
+        if (reservation.getReservationId() != 0){
+            mutableInventory = cleanListOfRoomForUpdatingReservation(reservation.getReservationId(), mutableInventory);
+        }
         for(Room room : reservation.getRooms()){
             RoomType type = room.getType();
             List<Room> roomsOfSameType = findRoomsOfType(type, mutableInventory);
@@ -115,5 +189,29 @@ public class ReservationServices {
     }
     private boolean reservationIsAccepted(Reservation reservation){
         return reservation.getStatus().equals(ReservationStatus.ACCEPTED);
+    }
+
+    private boolean datesOfReservationNeedToBeUpdated(Reservation newReservation){
+        return newReservation.getCheckInDate() != null && newReservation.getCheckOutDate() != null;
+    }
+
+    private List<Room> cleanListOfRoomForUpdatingReservation(int reservationId, List<Room> rooms){
+        List<Room> cleaned = new ArrayList<>();
+        for (Room room :rooms){
+            room.setReservations(
+                    room.getReservations()
+                            .stream()
+                            .filter(reservation -> reservation.getReservationId() != reservationId)
+                            .toList()
+            );
+            cleaned.add(room);
+        }
+        return cleaned;
+    }
+
+    private void validateThatReservationBelongsToUser(Reservation reservation, int userId){
+        if(reservation.getUser().getUserId() != userId){
+            throw new ForbbidenOperationException("This reservation does not belong to given user");
+        }
     }
 }
