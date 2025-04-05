@@ -25,31 +25,33 @@ public class RoomService {
         this.hotelDAO = hotelDAO;
     }
 
-    //TODO Check Availability of a Room
-
-    //Method to verify the availability of a room
-    public boolean isRoomAvailable(int roomId){
-        Room room = getRoomById(roomId);
-        return room.isAvailable();
-    }
     //TODO Manage availability of a Room
-
     //Method to change the availability of a Room
     public Optional<Room> changeRoomAvailability (int roomId){
-        //First check the availability of a Room
-        if (isRoomAvailable(roomId)){
-            //Then change to Occupied or Not available
-            Room storedRoom = getRoomById(roomId);
-            storedRoom.setAvailable(false);
-            return Optional.of(storedRoom);
-        }
-        return Optional.empty();
+        //Validate that the room exists
+        Room roomToUpdate = roomDAO.findById(roomId).orElseThrow(
+                () -> new RoomNotFoundException("There is not any room with the Id: "+ roomId)
+        );
+
+        //Change the availability
+        roomToUpdate.setAvailable(!roomToUpdate.isAvailable());
+
+        //Save room
+        return Optional.of(roomDAO.save(roomToUpdate));
     }
 
     //Method to get room by id
     public Room getRoomById (int roomId){
         return roomDAO.findById(roomId).orElseThrow(
                 () -> new RoomNotFoundException("There is not any room with the Id: "+ roomId));
+    }
+
+    //Method to get all available rooms of a hotel
+    public List<Room> getAllAvailableRooms (int hotelId){
+        Hotel hotel = hotelDAO.findById(hotelId).orElseThrow(() ->
+                new HotelNotFoundException("Hotel Not Found"));
+
+        return roomDAO.getAllAvailableRoomsByHotelId(hotelId);
     }
 
     //TODO Manage Inventory of a Room
@@ -69,24 +71,34 @@ public class RoomService {
         return Optional.of(roomDAO.save(newRoom));
     }
 
-    //Method to delete a specific Room
-    public boolean deleteRoom (int roomId){
-        //Find the room and delete it if present
-        if (roomDAO.findById(roomId).isPresent()){
-            roomDAO.deleteById(roomId);
-            return true;
-        }
-        return false;
+    //Method to update a specific Room
+    public Optional<Room> updateRoomById (int roomId, Room updatedRoom){
+        //Validate that the room exists
+        Room roomToUpdate = roomDAO.findById(roomId).orElseThrow(
+                () -> new RoomNotFoundException("There is not any room with the Id: "+ roomId)
+        );
+
+        //If exists, validate the data
+        validateRoomData(roomToUpdate);
+
+        //Set new values
+        roomToUpdate.setType(updatedRoom.getType() == null ? roomToUpdate.getType() : updatedRoom.getType());
+        roomToUpdate.setBeds(updatedRoom.getBeds() == 0 ? roomToUpdate.getBeds() : updatedRoom.getBeds());
+        roomToUpdate.setBaths(updatedRoom.getBaths() == 0 ? roomToUpdate.getBaths() : updatedRoom.getBaths());
+        roomToUpdate.setPrice(updatedRoom.getPrice() ==0 ? roomToUpdate.getPrice() : updatedRoom.getPrice());
+
+        return Optional.of(roomDAO.save(roomToUpdate));
     }
 
-    //Method to update a specific Room
-    public Optional<Room> updateRoom (int roomId, Room newRoom){
+    //Method to delete a room by id
+    public void deleteRoom (int roomId){
         //Validate that the room exists
-        if (roomDAO.findById(roomId).isPresent()){
-            return Optional.of(roomDAO.save(newRoom));
+        if(roomDAO.findById(roomId).isEmpty()){
+            throw new RoomNotFoundException("There is not any room with the Id: "+ roomId);
         }
-        return Optional.empty();
+        roomDAO.deleteById(roomId);
     }
+
 
     //Method to validate room data
     public void validateRoomData (Room room){

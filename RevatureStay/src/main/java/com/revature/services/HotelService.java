@@ -71,7 +71,6 @@ public class HotelService {
         if (hotelDAO.findById(hotelId).isEmpty()){
             throw new HotelNotFoundException("Hotel with Id " + hotelId + "is not found");
         }
-
         hotelDAO.deleteById(hotelId);
     }
 
