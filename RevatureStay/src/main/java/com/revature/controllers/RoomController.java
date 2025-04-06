@@ -6,6 +6,7 @@ import com.revature.models.Room;
 import com.revature.models.UserRole;
 import com.revature.services.HotelService;
 import com.revature.services.RoomService;
+import com.revature.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,13 @@ public class RoomController {
 
     private final RoomService roomService;
     private final HotelService hotelService;
+    private final UserService userService;
 
     @Autowired
-    public RoomController(RoomService roomService, HotelService hotelService) {
+    public RoomController(RoomService roomService, HotelService hotelService, UserService userService) {
         this.roomService = roomService;
         this.hotelService = hotelService;
+        this.userService = userService;
     }
 
     //Method to get all rooms
@@ -42,12 +45,8 @@ public class RoomController {
     @PostMapping("create")
     public Optional<Room> addNewRoomHandler (@RequestBody Room newRoom, @PathVariable int hotelId, HttpSession session){
         //Validate that the user is logged in and is an owner
-        if (session.getAttribute("userId") == null){
-            throw new UnauthenticatedException("You must be logged in to access this page");
-        }
-        if (session.getAttribute("role") != UserRole.OWNER){
-            throw new ForbiddenActionException("You must be logged in to access this page");
-        }
+        userService.validateUserIsAuthenticated(session);
+        userService.validateUserIsOwner(session);
 
         //Validate that the hotel belongs to the current logged owner
         int ownerId = (int) session.getAttribute("userId");
@@ -61,12 +60,8 @@ public class RoomController {
     @PutMapping("update/{roomId}")
     public Optional<Room> updateRoomByIdHandler (@PathVariable int hotelId, @PathVariable int roomId, @RequestBody Room updatedRoom, HttpSession session){
         //Validate that the user is logged in and is an owner
-        if (session.getAttribute("userId") == null){
-            throw new UnauthenticatedException("You must be logged in to access this page");
-        }
-        if (session.getAttribute("role") != UserRole.OWNER){
-            throw new ForbiddenActionException("You must be logged in to access this page");
-        }
+        userService.validateUserIsAuthenticated(session);
+        userService.validateUserIsOwner(session);
 
         //Validate that the hotel belongs to the current logged owner
         int ownerId = (int) session.getAttribute("userId");
@@ -80,12 +75,8 @@ public class RoomController {
     @DeleteMapping("{roomId}/delete")
     public void deleteRoomHandler (@PathVariable int hotelId, @PathVariable int roomId, HttpSession session){
         //Validate that the user is logged in and is an owner
-        if (session.getAttribute("userId") == null){
-            throw new UnauthenticatedException("You must be logged in to access this page");
-        }
-        if (session.getAttribute("role") != UserRole.OWNER){
-            throw new ForbiddenActionException("You must be logged in to access this page");
-        }
+        userService.validateUserIsAuthenticated(session);
+        userService.validateUserIsOwner(session);
 
         //Validate that the hotel belongs to the current logged owner
         int ownerId = (int) session.getAttribute("userId");
@@ -99,12 +90,8 @@ public class RoomController {
     @PatchMapping("{roomId}/availability")
     public Optional<Room> changeRoomAvailabilityHandler (@PathVariable int hotelId, @PathVariable int roomId, HttpSession session){
         //Validate that the user is logged in and is an owner
-        if (session.getAttribute("userId") == null){
-            throw new UnauthenticatedException("You must be logged in to access this page");
-        }
-        if (session.getAttribute("role") != UserRole.OWNER){
-            throw new ForbiddenActionException("You must be logged in to access this page");
-        }
+        userService.validateUserIsAuthenticated(session);
+        userService.validateUserIsOwner(session);
 
         //Validate that the hotel belongs to the current logged owner
         int ownerId = (int) session.getAttribute("userId");

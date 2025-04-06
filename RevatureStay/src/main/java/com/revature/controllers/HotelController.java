@@ -1,15 +1,15 @@
 package com.revature.controllers;
 
-import com.revature.exceptions.custom.user.ForbiddenActionException;
-import com.revature.exceptions.custom.user.UnauthenticatedException;
+
 import com.revature.models.Hotel;
-import com.revature.models.UserRole;
+
 import com.revature.services.HotelService;
+import com.revature.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationException;
+
 import java.util.Optional;
 
 @RestController
@@ -17,10 +17,12 @@ import java.util.Optional;
 public class HotelController {
 
     private final HotelService hotelService;
+    private final UserService userService;
 
     @Autowired
-    public HotelController(HotelService hotelService) {
+    public HotelController(HotelService hotelService, UserService userService) {
         this.hotelService = hotelService;
+        this.userService = userService;
     }
 
     //Method to get a specific hotel
@@ -33,12 +35,8 @@ public class HotelController {
     @PostMapping("create")
     public Optional<Hotel> addNewHotelHandler(@RequestBody Hotel newHotel, HttpSession session){
         //Validate that the user is logged in and is an owner
-        if (session.getAttribute("userId") == null){
-            throw new UnauthenticatedException("You must be logged in to access this page");
-        }
-        if (session.getAttribute("role") != UserRole.OWNER){
-            throw new ForbiddenActionException("You must be logged in to access this page");
-        }
+        userService.validateUserIsAuthenticated(session);
+        userService.validateUserIsOwner(session);
 
         int ownerId = (int) session.getAttribute("userId");
         return hotelService.addNewHotel(newHotel, ownerId);
@@ -48,12 +46,8 @@ public class HotelController {
     @PutMapping("update/{hotelId}")
     public Optional<Hotel> updateHotelByIdHandler (@PathVariable int hotelId, @RequestBody Hotel newHotel, HttpSession session){
         //Validate that the user is logged in and is an owner
-        if (session.getAttribute("userId") == null){
-            throw new UnauthenticatedException("You must be logged in to access this page");
-        }
-        if (session.getAttribute("role") != UserRole.OWNER){
-            throw new ForbiddenActionException("You must be logged in to access this page");
-        }
+        userService.validateUserIsAuthenticated(session);
+        userService.validateUserIsOwner(session);
 
         int ownerId = (int) session.getAttribute("userId");
         return hotelService.updateHotelById(hotelId, newHotel, ownerId);
@@ -63,13 +57,10 @@ public class HotelController {
     @DeleteMapping("delete/{hotelId}")
     public void deleteHotelHandler (@PathVariable int hotelId, HttpSession session){
         //Validate that the user is logged in and is an owner
-        if (session.getAttribute("userId") == null){
-            throw new UnauthenticatedException("You must be logged in to access this page");
-        }
-        if (session.getAttribute("role") != UserRole.OWNER){
-            throw new ForbiddenActionException("You must be logged in to access this page");
-        }
+        userService.validateUserIsAuthenticated(session);
+        userService.validateUserIsOwner(session);
 
+        //Delete hotel
         hotelService.deleteHotelById(hotelId);
 
     }

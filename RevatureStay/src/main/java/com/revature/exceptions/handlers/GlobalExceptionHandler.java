@@ -19,4 +19,9 @@ public class GlobalExceptionHandler {
     return ExceptionResponseBuilder.buildResponse("An unexpected error occurred: " + e.getMessage(),
                                                   HttpStatus.INTERNAL_SERVER_ERROR);
   }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<Map<String, String>> handleIllegalArgumentException (IllegalArgumentException e){
+    return ExceptionResponseBuilder.buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+  }
 }

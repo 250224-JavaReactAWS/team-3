@@ -92,7 +92,7 @@ public class HotelService {
             throw new InvalidHotelPhoneNumberException("Hotel phone number is not valid");
         }
         if (hotel.getDescription().length()<20){
-            throw new InvalidHotelDescription("Hotel description must have at least 20 characters");
+            throw new InvalidHotelDescriptionException("Hotel description must have at least 20 characters");
         }
     }
 
