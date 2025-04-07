@@ -131,8 +131,8 @@ public class ReservationServicesTests {
     @Test
     public void deleteRoomFromReservationShouldReturnTrue(){
         setMocksBehaviorToPerformUpdates();
-        List<Room> updatedListOfRooms = reservationServices.deleteRoomFromReservation(mockedUser.getUserId(), savedReservationId, 2);
-        assertFalse(updatedListOfRooms.contains(mockedHotel.getRooms().get(1)));
+        boolean result = reservationServices.deleteRoomFromReservation(mockedUser.getUserId(), savedReservationId, 2);
+        assertTrue(result);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class ReservationServicesTests {
         setMocksBehaviorToPerformRetrievals();
         int differentUserId = 8;
         assertThrows(ForbbidenOperationException.class, () -> {
-            List<Room> updatedListOfRooms = reservationServices.deleteRoomFromReservation(differentUserId, savedReservationId, 2);
+            boolean result = reservationServices.deleteRoomFromReservation(differentUserId, savedReservationId, 2);
         });
     }
 
@@ -150,8 +150,8 @@ public class ReservationServicesTests {
         Room roomToAdd = new Room();
         roomToAdd.setType(RoomType.TRIPLE);
         List<Room> beforeUpdateRooms = mockedSavedReservation.getRooms();
-        List<Room> roomsUpdated = reservationServices.addRoomToReservation(mockedUser.getUserId(), savedReservationId, roomToAdd);
-        assertEquals(beforeUpdateRooms.size() + 1, roomsUpdated.size());
+        Room roomUpdated = reservationServices.addRoomToReservation(mockedUser.getUserId(), savedReservationId, roomToAdd);
+        assertEquals(RoomType.TRIPLE, roomUpdated.getType());
     }
 
     @Test
@@ -191,9 +191,25 @@ public class ReservationServicesTests {
     }
 
     @Test
-    public void updateReservationStatusShouldReturnUpdatedReservationAfterOwnerAcceptIt(){
+    public void updateReservationStatusShouldThrowExceptionWhenARoomIsNotAvailable(){
         User owner = setOwner();
         owner.setOwnerHotels(List.of(mockedHotel));
+        when(mockedUserDAO.findById(any())).thenReturn(Optional.of(owner));
+        when(mockedReservationDAO.findById(any())).thenReturn(Optional.of(mockedSavedReservation));
+        ReservationStatus newStatus = ReservationStatus.ACCEPTED;
+        Reservation reservationWithNewStatus = new Reservation();
+        reservationWithNewStatus.setReservationId(savedReservationId);
+        reservationWithNewStatus.setStatus(newStatus);
+        assertThrows(RoomNotAvailableException.class, () -> {
+            Reservation updatedReservation = reservationServices.updateReservationStatus(owner.getUserId(), reservationWithNewStatus);
+        });
+    }
+
+    @Test
+    public void updateReservationStatusShouldReturnUpdatedStatusWhenIsAccepted(){
+        User owner = setOwner();
+        owner.setOwnerHotels(List.of(mockedHotel));
+        mockedSavedReservation.setRooms(List.of(mockedHotel.getRooms().get(0),mockedHotel.getRooms().get(2)));
         when(mockedUserDAO.findById(any())).thenReturn(Optional.of(owner));
         when(mockedReservationDAO.findById(any())).thenReturn(Optional.of(mockedSavedReservation));
         when(mockedReservationDAO.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
