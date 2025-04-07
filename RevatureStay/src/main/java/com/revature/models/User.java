@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -28,15 +29,19 @@ public class User {
 
   //Relationships
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
   private List<Reservation> reservations;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
   private List<Review> reviews;
 
   @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
   private List<Hotel> ownerHotels;
 
   @ManyToMany
+  @JsonIgnore
   @JoinTable(
           name = "favorites",
           joinColumns = @JoinColumn(name = "user_id"),
