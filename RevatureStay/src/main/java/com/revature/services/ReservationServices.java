@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import com.revature.exceptions.custom.reservation.*;
+import com.revature.exceptions.custom.user.ForbiddenActionException;
 import com.revature.models.*;
 import com.revature.repos.HotelDAO;
 import com.revature.repos.ReservationDAO;
@@ -56,7 +57,7 @@ public class ReservationServices {
         User user = findUser(userId);
         Reservation reservation = findReservation(reservationId);
         if(reservation.getUser().getUserId() != userId && reservation.getHotel().getOwner().getUserId() != userId){
-            throw new ForbbidenOperationException("You can not access this resource");
+            throw new ForbiddenActionException("You can not access this resource");
         }
         return reservation;
     }
@@ -118,13 +119,13 @@ public class ReservationServices {
         if(user.getRole().equals(UserRole.CUSTOMER)){
             validateThatReservationBelongsToUser(savedReservation, userId);
             if(!reservation.getStatus().equals(ReservationStatus.CANCELLED)){
-                throw new ForbbidenOperationException("You can not set the status "+ reservation.getStatus() + " on this reservation");
+                throw new ForbiddenActionException("You can not set the status "+ reservation.getStatus() + " on this reservation");
             }
         }else{
             List<Hotel> userHotels = user.getOwnerHotels();
             Hotel reservationHotel = savedReservation.getHotel();
             if(!userHotels.contains(reservationHotel)){
-                throw new ForbbidenOperationException("This reservation does not belong to any of your hotels");
+                throw new ForbiddenActionException("This reservation does not belong to any of your hotels");
             }
             if(reservation.getStatus().equals(ReservationStatus.ACCEPTED)){
                 validateReservationRoomsAvailability(savedReservation);
@@ -139,7 +140,7 @@ public class ReservationServices {
         User user = findUser(userId);
         Reservation reservation = findReservation(reservationId);
         if(!user.getRole().equals(UserRole.OWNER) || reservation.getHotel().getOwner().getUserId() != userId){
-            throw new ForbbidenOperationException("You are not allowed to perform this operation");
+            throw new ForbiddenActionException("You are not allowed to perform this operation");
         }
         Optional<Room> savedRoom = reservation.getHotel().getRooms().stream().filter(r -> r.getRoomId() == room.getRoomId()).findFirst();
         if(savedRoom.isEmpty()){
@@ -264,7 +265,7 @@ public class ReservationServices {
 
     private void validateThatReservationBelongsToUser(Reservation reservation, int userId){
         if(reservation.getUser().getUserId() != userId){
-            throw new ForbbidenOperationException("This reservation does not belong to given user");
+            throw new ForbiddenActionException("This reservation does not belong to given user");
         }
     }
 

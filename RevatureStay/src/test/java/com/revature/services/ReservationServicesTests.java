@@ -1,6 +1,6 @@
 package com.revature.services;
 
-import com.revature.exceptions.custom.reservation.ForbbidenOperationException;
+import com.revature.exceptions.custom.user.ForbiddenActionException;
 import com.revature.exceptions.custom.reservation.InvalidDatesException;
 import com.revature.exceptions.custom.reservation.ResourceNotFoundException;
 import com.revature.exceptions.custom.reservation.RoomNotAvailableException;
@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,7 +111,7 @@ public class ReservationServicesTests {
         setMocksBehaviorToPerformRetrievals();
         Reservation reservationWithNewValues = new Reservation();
         reservationWithNewValues.setUser(mockedUser);
-        assertThrows(ForbbidenOperationException.class, () ->{
+        assertThrows(ForbiddenActionException.class, () ->{
            reservationServices.updateReservation(reservationWithNewValues, 5);
         });
     }
@@ -139,7 +138,7 @@ public class ReservationServicesTests {
     public void deleteRoomFromReservationShouldThrowAnExceptionWhenReservationDoesNotBelongToUser(){
         setMocksBehaviorToPerformRetrievals();
         int differentUserId = 8;
-        assertThrows(ForbbidenOperationException.class, () -> {
+        assertThrows(ForbiddenActionException.class, () -> {
             boolean result = reservationServices.deleteRoomFromReservation(differentUserId, savedReservationId, 2);
         });
     }
@@ -172,7 +171,7 @@ public class ReservationServicesTests {
         Reservation reservationWithNewStatus = new Reservation();
         reservationWithNewStatus.setReservationId(savedReservationId);
         reservationWithNewStatus.setStatus(newStatus);
-        assertThrows(ForbbidenOperationException.class, () -> {
+        assertThrows(ForbiddenActionException.class, () -> {
             Reservation updatedReservation = reservationServices.updateReservationStatus(mockedUser.getUserId(), reservationWithNewStatus);
         });
     }
@@ -185,7 +184,7 @@ public class ReservationServicesTests {
         Reservation reservationWithNewStatus = new Reservation();
         reservationWithNewStatus.setReservationId(savedReservationId);
         reservationWithNewStatus.setStatus(newStatus);
-        assertThrows(ForbbidenOperationException.class, () -> {
+        assertThrows(ForbiddenActionException.class, () -> {
             Reservation updatedReservation = reservationServices.updateReservationStatus(owner.getUserId(), reservationWithNewStatus);
         });
     }
