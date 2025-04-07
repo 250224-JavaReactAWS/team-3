@@ -37,6 +37,7 @@ public class ReservationServices {
         reservationToBeMade.setUser(user);
         reservationToBeMade.setHotel(hotel);
         reservationToBeMade.setRooms(rooms);
+        reservationToBeMade.setStatus(ReservationStatus.PENDING);
         return reservationDAO.save(reservationToBeMade);
     }
 
