@@ -1,9 +1,6 @@
 package com.revature.services;
 
-import com.revature.exceptions.custom.reservation.ForbbidenOperationException;
-import com.revature.exceptions.custom.reservation.InvalidDatesException;
-import com.revature.exceptions.custom.reservation.ResourceNotFoundException;
-import com.revature.exceptions.custom.reservation.RoomNotAvailableException;
+import com.revature.exceptions.custom.reservation.*;
 import com.revature.models.*;
 import com.revature.repos.HotelDAO;
 import com.revature.repos.ReservationDAO;
@@ -42,7 +39,24 @@ public class ReservationServices {
 
     public List<Reservation> viewMyReservations(int userId){
         User user = findUser(userId);
-        return user.getReservations();
+        if(user.getRole().equals(UserRole.CUSTOMER)){
+            return user.getReservations();
+        }
+        List<Hotel> hotels = user.getOwnerHotels();
+        List<Reservation> reservations = new ArrayList<>();
+        for(Hotel hotel : hotels){
+            reservations.addAll(hotel.getReservations());
+        }
+        return reservations;
+    }
+
+    public Reservation viewReservation(int userId, int reservationId){
+        User user = findUser(userId);
+        Reservation reservation = findReservation(reservationId);
+        if(reservation.getUser().getUserId() != userId && reservation.getHotel().getOwner().getUserId() != userId){
+            throw new ForbbidenOperationException("You can not access this resource");
+        }
+        return reservation;
     }
 
     public Reservation updateReservation(Reservation reservation, int userId){
@@ -63,16 +77,17 @@ public class ReservationServices {
         return reservationDAO.save(storedReservation);
     }
 
-    public List<Room> deleteRoomFromReservation(int userId, int reservationId, int roomId){
+    public boolean deleteRoomFromReservation(int userId, int reservationId, int roomId){
         User user = findUser(userId);
         Reservation reservation = findReservation(reservationId);
         validateThatReservationBelongsToUser(reservation, userId);
         List<Room> newRooms = reservation.getRooms().stream().filter(room -> room.getRoomId() != roomId).toList();
         reservation.setRooms(newRooms);
-        return reservationDAO.save(reservation).getRooms();
+        List<Room> newSavedRooms = reservationDAO.save(reservation).getRooms();
+        return newSavedRooms.stream().filter(room -> room.getRoomId() == roomId).toList().isEmpty();
     }
 
-    public List<Room> addRoomToReservation(int userId, int reservationId, Room room){
+    public Room addRoomToReservation(int userId, int reservationId, Room room){
         User user = findUser(userId);
         Reservation reservation = findReservation(reservationId);
         validateThatReservationBelongsToUser(reservation, userId);
@@ -84,7 +99,11 @@ public class ReservationServices {
         List<Room> rooms = new ArrayList<>(reservation.getRooms());
         rooms.add(availableRoom.get());
         reservation.setRooms(rooms);
-        return reservationDAO.save(reservation).getRooms();
+        Optional<Room> savedNewRoom = reservationDAO.save(reservation).getRooms().stream().filter(r -> r.getRoomId() == availableRoom.get().getRoomId()).findFirst();
+        if(savedNewRoom.isEmpty()){
+            throw new InternalException("Something went wrong while adding Room to Reservation");
+        }
+        return savedNewRoom.get();
     }
 
     public Reservation updateReservationStatus(int userId, Reservation reservation){
@@ -101,10 +120,35 @@ public class ReservationServices {
             if(!userHotels.contains(reservationHotel)){
                 throw new ForbbidenOperationException("This reservation does not belong to any of your hotels");
             }
+            if(reservation.getStatus().equals(ReservationStatus.ACCEPTED)){
+                validateReservationRoomsAvailability(savedReservation);
+            }
         }
-
         savedReservation.setStatus(reservation.getStatus());
         return reservationDAO.save(savedReservation);
+    }
+
+    public Room updateRoomFromReservation(int userId, int reservationId, int roomId, Room room){
+        User user = findUser(userId);
+        Reservation reservation = findReservation(reservationId);
+        if(!user.getRole().equals(UserRole.OWNER) || reservation.getHotel().getOwner().getUserId() != userId){
+            throw new ForbbidenOperationException("You are not allowed to perform this operation");
+        }
+        Optional<Room> savedRoom = reservation.getHotel().getRooms().stream().filter(r -> r.getRoomId() == room.getRoomId()).findFirst();
+        if(savedRoom.isEmpty()){
+            throw new ResourceNotFoundException("Room with id: "+room.getRoomId() +" was not found");
+        }
+        if(!roomIsAvailable(savedRoom.get(), reservation.getCheckInDate(), reservation.getCheckOutDate())){
+            throw new RoomNotAvailableException("Room with id: " + room.getRoomId() + "is not available for given dates");
+        }
+        List<Room> newRooms = new ArrayList<>(reservation.getRooms().stream().filter( r -> r.getRoomId() != roomId).toList());
+        newRooms.add(savedRoom.get());
+        reservation.setRooms(newRooms);
+        Optional<Room> addedRoom = reservationDAO.save(reservation).getRooms().stream().filter(r -> r.getRoomId() == room.getRoomId()).findFirst();
+        if (addedRoom.isEmpty()){
+            throw new InternalException("Something went wrong!");
+        }
+        return addedRoom.get();
     }
 
     private User findUser(int userID){
@@ -130,6 +174,7 @@ public class ReservationServices {
         }
         return reservation.get();
     }
+
 
     private void validateReservationDates(LocalDate checkIn, LocalDate checkOut){
         LocalDate now = LocalDate.now();
@@ -173,6 +218,7 @@ public class ReservationServices {
         return Optional.empty();
     }
 
+
     private boolean roomIsAvailable(Room room, LocalDate checking, LocalDate checkout){
         List<Reservation> reservations = room.getReservations();
         for(Reservation reservation : reservations){
@@ -214,4 +260,19 @@ public class ReservationServices {
             throw new ForbbidenOperationException("This reservation does not belong to given user");
         }
     }
+
+    private void validateReservationRoomsAvailability(Reservation reservation){
+        List<Room> rooms = reservation.getRooms();
+        for(Room room : rooms){
+            List <Reservation> reservations = room.getReservations()
+                    .stream()
+                    .filter(r -> r.getReservationId() != reservation.getReservationId())
+                    .toList();
+            room.setReservations(reservations);
+            if(!roomIsAvailable(room, reservation.getCheckInDate(), reservation.getCheckOutDate())){
+                throw new RoomNotAvailableException("Room with ID: " + room.getRoomId() + " is not available. Please replace with an available Room and try again.");
+            }
+        }
+    }
+
 }
