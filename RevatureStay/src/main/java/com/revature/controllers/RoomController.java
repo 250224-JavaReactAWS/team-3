@@ -42,7 +42,7 @@ public class RoomController {
     }
 
     //Method to addNewRoom
-    @PostMapping("create")
+    @PostMapping
     public Optional<Room> addNewRoomHandler (@RequestBody Room newRoom, @PathVariable int hotelId, HttpSession session){
         //Validate that the user is logged in and is an owner
         userService.validateUserIsAuthenticated(session);
@@ -57,7 +57,7 @@ public class RoomController {
     }
 
     //Method to update a specific Room
-    @PutMapping("update/{roomId}")
+    @PutMapping("{roomId}")
     public Optional<Room> updateRoomByIdHandler (@PathVariable int hotelId, @PathVariable int roomId, @RequestBody Room updatedRoom, HttpSession session){
         //Validate that the user is logged in and is an owner
         userService.validateUserIsAuthenticated(session);
@@ -72,7 +72,7 @@ public class RoomController {
     }
 
     //Method to delete a room
-    @DeleteMapping("{roomId}/delete")
+    @DeleteMapping("{roomId}")
     public void deleteRoomHandler (@PathVariable int hotelId, @PathVariable int roomId, HttpSession session){
         //Validate that the user is logged in and is an owner
         userService.validateUserIsAuthenticated(session);

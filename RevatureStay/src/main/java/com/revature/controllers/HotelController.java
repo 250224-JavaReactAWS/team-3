@@ -32,7 +32,7 @@ public class HotelController {
     }
 
     //Method to add new Hotel (OWNER ONLY)
-    @PostMapping("create")
+    @PostMapping
     public Optional<Hotel> addNewHotelHandler(@RequestBody Hotel newHotel, HttpSession session){
         //Validate that the user is logged in and is an owner
         userService.validateUserIsAuthenticated(session);
@@ -43,7 +43,7 @@ public class HotelController {
     }
 
     //Method to update a specific hotel (OWNER ONLY)
-    @PutMapping("update/{hotelId}")
+    @PutMapping("{hotelId}")
     public Optional<Hotel> updateHotelByIdHandler (@PathVariable int hotelId, @RequestBody Hotel newHotel, HttpSession session){
         //Validate that the user is logged in and is an owner
         userService.validateUserIsAuthenticated(session);
@@ -54,7 +54,7 @@ public class HotelController {
     }
 
     //Method to delete a specific hotel (OWNER ONLY)
-    @DeleteMapping("delete/{hotelId}")
+    @DeleteMapping("{hotelId}")
     public void deleteHotelHandler (@PathVariable int hotelId, HttpSession session){
         //Validate that the user is logged in and is an owner
         userService.validateUserIsAuthenticated(session);
