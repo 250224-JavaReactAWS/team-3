@@ -7,6 +7,7 @@ import com.revature.repos.ReservationDAO;
 import com.revature.repos.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class ReservationServices {
         this.usersDAO = usersDAO;
     }
 
+    @Transactional
     public Reservation makeReservation(Reservation reservationToBeMade, int userId){
         User user = findUser(userId);
         Hotel hotel = findHotel(reservationToBeMade);
@@ -59,6 +61,7 @@ public class ReservationServices {
         return reservation;
     }
 
+    @Transactional
     public Reservation updateReservation(Reservation reservation, int userId){
         User user = findUser(userId);
         Reservation storedReservation = findReservation(reservation.getReservationId());
@@ -77,6 +80,7 @@ public class ReservationServices {
         return reservationDAO.save(storedReservation);
     }
 
+    @Transactional
     public boolean deleteRoomFromReservation(int userId, int reservationId, int roomId){
         User user = findUser(userId);
         Reservation reservation = findReservation(reservationId);
@@ -87,6 +91,7 @@ public class ReservationServices {
         return newSavedRooms.stream().filter(room -> room.getRoomId() == roomId).toList().isEmpty();
     }
 
+    @Transactional
     public Room addRoomToReservation(int userId, int reservationId, Room room){
         User user = findUser(userId);
         Reservation reservation = findReservation(reservationId);
@@ -106,6 +111,7 @@ public class ReservationServices {
         return savedNewRoom.get();
     }
 
+    @Transactional
     public Reservation updateReservationStatus(int userId, Reservation reservation){
         User user = findUser(userId);
         Reservation savedReservation = findReservation(reservation.getReservationId());
@@ -128,6 +134,7 @@ public class ReservationServices {
         return reservationDAO.save(savedReservation);
     }
 
+    @Transactional
     public Room updateRoomFromReservation(int userId, int reservationId, int roomId, Room room){
         User user = findUser(userId);
         Reservation reservation = findReservation(reservationId);
