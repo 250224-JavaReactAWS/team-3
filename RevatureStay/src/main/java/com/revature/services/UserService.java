@@ -2,7 +2,9 @@ package com.revature.services;
 
 import com.revature.exceptions.custom.user.*;
 import com.revature.models.User;
+import com.revature.models.UserRole;
 import com.revature.repos.UserDAO;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,4 +58,19 @@ public class UserService {
 
     return Optional.of(userToLogin);
   }
+
+  //Method to verify if a user is already logged in
+  public void validateUserIsAuthenticated (HttpSession session){
+      if (session.getAttribute("userId") == null){
+        throw new UnauthenticatedException("You must be logged in to access this page");
+      }
+  }
+
+  //Method to verify if the logged user is an owner
+  public void validateUserIsOwner (HttpSession session){
+      if (session.getAttribute("role") != UserRole.OWNER){
+        throw new ForbiddenActionException("You cannot access to this page");
+      }
+  }
+
 }

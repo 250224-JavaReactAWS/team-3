@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -27,22 +28,28 @@ public class Hotel {
 
   //Relatioships
   @ManyToOne
+  @JsonIgnore
   @JoinColumn(name = "owner_id")
   private User owner;
 
   @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
   private List<Room> rooms;
 
   @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
   private List<Image> images;
 
   @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
   private List<Reservation> reservations;
 
   @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
   private List<Review> reviews;
 
   @ManyToMany(mappedBy = "hotels", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<User> users;
 
   public Hotel() {

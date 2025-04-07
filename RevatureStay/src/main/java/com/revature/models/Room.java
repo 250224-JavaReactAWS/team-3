@@ -1,6 +1,9 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -24,14 +27,16 @@ public class Room {
   private double price;
 
   @Column(nullable = false)
-  private boolean isAvailable;
+  private boolean isAvailable = true;
 
   //Relationship with Hotel
   @ManyToOne
+  @JsonIgnore
   @JoinColumn(name = "hotel_id")
   private Hotel hotel;
 
   @ManyToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<Reservation> reservations;
 
   public Room() {}

@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class UserExceptionHandler {
-
   @ExceptionHandler(EmailAlreadyRegisteredException.class)
   public ResponseEntity<Map<String, String>> handleEmailAlreadyRegisteredException(EmailAlreadyRegisteredException e) {
     return ExceptionResponseBuilder.buildResponse(e.getMessage(), HttpStatus.CONFLICT);
@@ -35,5 +34,20 @@ public class UserExceptionHandler {
   @ExceptionHandler(WrongPasswordException.class)
   public ResponseEntity<Map<String, String>> handleWrongPasswordException(WrongPasswordException e) {
     return ExceptionResponseBuilder.buildResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(ForbiddenActionException.class)
+  public ResponseEntity<Map<String, String>> handleForbiddenActionException (ForbiddenActionException e){
+    return ExceptionResponseBuilder.buildResponse(e.getMessage(), HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(UnauthenticatedException.class)
+  public ResponseEntity<Map<String, String>> handleUnauthenticatedException (UnauthenticatedException e){
+    return ExceptionResponseBuilder.buildResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(OwnerDoesNotExistsException.class)
+  public ResponseEntity<Map<String, String>> handleOwnerDoesNotExistsException (OwnerDoesNotExistsException e){
+    return ExceptionResponseBuilder.buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
   }
 }
