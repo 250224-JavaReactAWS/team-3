@@ -80,7 +80,7 @@ public class ReservationController {
     private int getUserIdFromSession(HttpSession session){
         Integer userId = (Integer) session.getAttribute("userId");
         if(userId == null){
-            throw new UnauthenticatedException();
+            throw new UnauthenticatedException("You need to log in before access this feature");
         }
         return userId;
     }
