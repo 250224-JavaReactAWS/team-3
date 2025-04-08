@@ -31,6 +31,9 @@ public class ReservationServices {
     @Transactional
     public Reservation makeReservation(Reservation reservationToBeMade, int userId){
         User user = findUser(userId);
+        if(user.getRole().equals(UserRole.OWNER)){
+            throw new ForbiddenActionException("Owners can not make reservations!");
+        }
         Hotel hotel = findHotel(reservationToBeMade);
         validateReservationDates(reservationToBeMade.getCheckInDate(), reservationToBeMade.getCheckOutDate());
         List<Room> rooms = findRoomsForReservation(reservationToBeMade, hotel.getRooms());
@@ -244,7 +247,8 @@ public class ReservationServices {
         return !(checkout.equals(reservationChecking) || checking.equals(reservationCheckout) || checkout.isBefore(reservationChecking) || checking.isAfter(reservationCheckout));
     }
     private boolean reservationIsAccepted(Reservation reservation){
-        return reservation.getStatus().equals(ReservationStatus.ACCEPTED);
+        ReservationStatus status = reservation.getStatus();
+        return status.equals(ReservationStatus.ACCEPTED) || status.equals(ReservationStatus.PENDING);
     }
 
     private boolean datesOfReservationNeedToBeUpdated(Reservation newReservation){
