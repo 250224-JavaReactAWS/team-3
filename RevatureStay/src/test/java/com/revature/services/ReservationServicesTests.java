@@ -53,7 +53,7 @@ public class ReservationServicesTests {
         Room room1 = new Room();
         Room room2 = new Room();
         room1.setType(RoomType.DOUBLE);
-        room2.setType(RoomType.SUITE);
+        room2.setType(RoomType.TRIPLE);
         reservationToTest = new Reservation(checking, checkout, guests, ReservationStatus.PENDING,mockedUser, mockedHotel, List.of(room1, room2));
         mockedSavedReservation = new Reservation(savedReservationId, checking, checkout, guests, ReservationStatus.PENDING, mockedUser, mockedHotel, List.of(mockedHotel.getRooms().get(0),mockedHotel.getRooms().get(1)) );
     }
@@ -192,21 +192,6 @@ public class ReservationServicesTests {
         reservationWithNewStatus.setReservationId(savedReservationId);
         reservationWithNewStatus.setStatus(newStatus);
         assertThrows(ForbiddenActionException.class, () -> {
-            Reservation updatedReservation = reservationServices.updateReservationStatus(owner.getUserId(), reservationWithNewStatus);
-        });
-    }
-
-    @Test
-    public void updateReservationStatusShouldThrowExceptionWhenARoomIsNotAvailable(){
-        User owner = setOwner();
-        owner.setOwnerHotels(List.of(mockedHotel));
-        when(mockedUserDAO.findById(any())).thenReturn(Optional.of(owner));
-        when(mockedReservationDAO.findById(any())).thenReturn(Optional.of(mockedSavedReservation));
-        ReservationStatus newStatus = ReservationStatus.ACCEPTED;
-        Reservation reservationWithNewStatus = new Reservation();
-        reservationWithNewStatus.setReservationId(savedReservationId);
-        reservationWithNewStatus.setStatus(newStatus);
-        assertThrows(RoomNotAvailableException.class, () -> {
             Reservation updatedReservation = reservationServices.updateReservationStatus(owner.getUserId(), reservationWithNewStatus);
         });
     }

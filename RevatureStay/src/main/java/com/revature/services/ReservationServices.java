@@ -132,9 +132,6 @@ public class ReservationServices {
             if(!userHotels.contains(reservationHotel)){
                 throw new ForbiddenActionException("This reservation does not belong to any of your hotels");
             }
-            if(reservation.getStatus().equals(ReservationStatus.ACCEPTED)){
-                validateReservationRoomsAvailability(savedReservation);
-            }
         }
         savedReservation.setStatus(reservation.getStatus());
         return reservationDAO.save(savedReservation);
@@ -274,19 +271,4 @@ public class ReservationServices {
             throw new ForbiddenActionException("This reservation does not belong to given user");
         }
     }
-
-    private void validateReservationRoomsAvailability(Reservation reservation){
-        List<Room> rooms = reservation.getRooms();
-        for(Room room : rooms){
-            List <Reservation> reservations = room.getReservations()
-                    .stream()
-                    .filter(r -> r.getReservationId() != reservation.getReservationId())
-                    .toList();
-            room.setReservations(reservations);
-            if(!roomIsAvailable(room, reservation.getCheckInDate(), reservation.getCheckOutDate())){
-                throw new RoomNotAvailableException("Room with ID: " + room.getRoomId() + " is not available. Please replace with an available Room and try again.");
-            }
-        }
-    }
-
 }
