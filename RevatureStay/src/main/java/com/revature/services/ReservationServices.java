@@ -87,10 +87,10 @@ public class ReservationServices {
         User user = findUser(userId);
         Reservation reservation = findReservation(reservationId);
         validateThatReservationBelongsToUser(reservation, userId);
-        List<Room> newRooms = reservation.getRooms().stream().filter(room -> room.getRoomId() != roomId).toList();
+        List<Room> newRooms = new ArrayList<>(reservation.getRooms().stream().filter(room -> room.getRoomId() != roomId).toList());
         reservation.setRooms(newRooms);
         List<Room> newSavedRooms = reservationDAO.save(reservation).getRooms();
-        return newSavedRooms.stream().filter(room -> room.getRoomId() == roomId).toList().isEmpty();
+        return newSavedRooms.stream().filter(room -> room.getRoomId() == roomId).findFirst().isEmpty();
     }
 
     @Transactional
