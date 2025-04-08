@@ -98,7 +98,8 @@ public class ReservationServices {
         User user = findUser(userId);
         Reservation reservation = findReservation(reservationId);
         validateThatReservationBelongsToUser(reservation, userId);
-        List<Room> roomsOfSameType = findRoomsOfType(room.getType(), reservation.getHotel().getRooms());
+        List<Room> oldRooms = reservation.getRooms();
+        List<Room> roomsOfSameType = findRoomsOfType(room.getType(), reservation.getHotel().getRooms()).stream().filter(r -> !oldRooms.contains(r)).toList();
         Optional<Room> availableRoom = findAvailableRoom(reservation.getCheckInDate(), reservation.getCheckOutDate(), roomsOfSameType);
         if(availableRoom.isEmpty()){
             throw new RoomNotAvailableException("No available room found for the type: " + room.getType().toString());
