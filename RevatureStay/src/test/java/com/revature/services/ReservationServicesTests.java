@@ -148,11 +148,18 @@ public class ReservationServicesTests {
         setMocksBehaviorToPerformUpdates();
         Room roomToAdd = new Room();
         roomToAdd.setType(RoomType.TRIPLE);
-        List<Room> beforeUpdateRooms = mockedSavedReservation.getRooms();
         Room roomUpdated = reservationServices.addRoomToReservation(mockedUser.getUserId(), savedReservationId, roomToAdd);
         assertEquals(RoomType.TRIPLE, roomUpdated.getType());
     }
 
+    @Test
+    public void addRoomToReservationShouldNotAddARoomThatIsAlreadyInReservation(){
+        setMocksBehaviorToPerformUpdates();
+        Room roomToAdd = new Room();
+        roomToAdd.setType(RoomType.DOUBLE);
+        Room updatedRoom = reservationServices.addRoomToReservation(mockedUser.getUserId(), savedReservationId, roomToAdd);
+        assertEquals(5, updatedRoom.getRoomId());
+    }
     @Test
     public void updateReservationStatusShouldReturnAReservationWhitNewStatus(){
         setMocksBehaviorToPerformUpdates();
@@ -245,6 +252,7 @@ public class ReservationServicesTests {
         Room room2 = new Room();
         Room room3 = new Room();
         Room room4 = new Room();
+        Room room5 = new Room();
         room1.setRoomId(1);
         room1.setType(RoomType.DOUBLE);
         room1.setReservations(List.of(reservation1, reservation3));
@@ -257,7 +265,10 @@ public class ReservationServicesTests {
         room4.setRoomId(4);
         room4.setType(RoomType.TRIPLE);
         room4.setReservations(List.of());
-        return List.of(room1, room2, room3, room4);
+        room5.setRoomId(5);
+        room5.setType(RoomType.DOUBLE);
+        room5.setReservations(List.of());
+        return List.of(room1, room2, room3, room4, room5);
     }
 
     private void setMocksBehaviorToPerformUpdates(){
