@@ -9,6 +9,7 @@ import com.revature.repos.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,10 @@ public class HotelService {
         return hotelDAO.findById(hotelId).orElseThrow( () ->
                 new HotelNotFoundException("Hotel with Id " + hotelId + "is not found")
         );
+    }
+
+    public List<Hotel> getAllHotels (){
+        return hotelDAO.findAll();
     }
 
     //TODO Manage hotels
