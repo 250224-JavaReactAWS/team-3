@@ -55,30 +55,41 @@ import { createTheme } from '@mui/material/styles';
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#F0932B'
+      main: '#F0932B',
+      contrastText: '#FFF'
     },
     secondary: {
-      main: '#26547C'
+      main: '#C44536',
+      contrastText: "#FFF"
     },
-    error: {
-      main: '#CC444B'
-    }, 
-    success: {
-      main: '#9EBC9E'
-    }
+    text: {
+      primary: '#2D3436',
+      secondary: '#5E5E5E',
+    },
+    background: {
+      default: '#FAF4EF',
+      paper: '#FFFFFF',
+    },
   },
   typography: {
     fontFamily: 'Poppins, Arial, sans-serif',
-    h6:{
-      fontSize:'1rem',
-      fontWeight: 600
+    h1: {
+      fontFamily: "'Playfair Display', 'Bodoni MT',serif"
     },
-    h5:{
-      fontSize:'1.3rem',
-      fontWeight: 600
+    h2: {
+      fontFamily: "'Playfair Display', 'Bodoni MT',serif"
     },
-    body1:{
-      fontSize:'0.9rem'
+    h3: {
+      fontFamily: "'Playfair Display', 'Bodoni MT',serif"
+    },
+    h4: {
+      fontFamily: "'Playfair Display', 'Bodoni MT',serif"
+    },
+    h5: {
+      fontFamily: "'Playfair Display', 'Bodoni MT',serif"
+    },
+    h6: {
+      fontFamily: "'Playfair Display', 'Bodoni MT',serif"
     }
   },
   components:{

@@ -1,6 +1,8 @@
 package com.revature.controllers;
 
+import com.revature.exceptions.custom.user.UnauthenticatedException;
 import com.revature.models.User;
+import com.revature.models.UserRole;
 import com.revature.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -8,15 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
 @RequestMapping("users")
+@CrossOrigin(origins = {"http://localhost:5173"}, allowCredentials = "true")
 public class UserController {
   private final UserService userService;
   private final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -47,6 +47,17 @@ public class UserController {
       return userLogged.get();
     }
     return null;
+  }
+
+  @GetMapping("session")
+  public String getSessionRoleHandler( HttpSession session) {
+    if(session.getAttribute("role") == null) {
+      throw new UnauthenticatedException("Not logged in!");
+    }
+
+    UserRole role = (UserRole) session.getAttribute("role");
+
+    return role.toString();
   }
 }
 

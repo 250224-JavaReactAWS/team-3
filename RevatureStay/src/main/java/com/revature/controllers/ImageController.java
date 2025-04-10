@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("hotels/{hotelId}/images")
+@CrossOrigin(origins = {"http://localhost:5173"}, allowCredentials = "true")
 public class ImageController {
 
     private final ImageService imageService;

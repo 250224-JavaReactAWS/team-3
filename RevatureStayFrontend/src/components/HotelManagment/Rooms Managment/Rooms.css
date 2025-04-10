@@ -1,0 +1,32 @@
+@import '../../../index.css';
+
+
+
+.room-item{
+    display: flex;
+    justify-content: space-between;
+    vertical-align: middle;
+    background-color: var(--yinmnBlue);
+    border-radius: 5px;
+    color: white;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+ul{
+    padding: 0;
+    margin-left: 10px;
+    display: flex;
+    gap: 20px;
+}
+
+li{
+    list-style: none;
+}
+
+.icons{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 10px;
+}

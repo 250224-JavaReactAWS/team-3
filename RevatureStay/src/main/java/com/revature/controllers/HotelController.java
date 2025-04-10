@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("hotels")
+@CrossOrigin(origins = {"http://localhost:5173"}, allowCredentials = "true")
 public class HotelController {
 
     private final HotelService hotelService;
@@ -23,6 +25,22 @@ public class HotelController {
     public HotelController(HotelService hotelService, UserService userService) {
         this.hotelService = hotelService;
         this.userService = userService;
+    }
+    //Method to get all hotels
+    @GetMapping
+    public List<Hotel> getAllHotelsHandler(){
+        return hotelService.getAllHotels();
+    }
+
+    @GetMapping("my-hotels")
+    //Method to get all hotels that belongs to a user
+    public List<Hotel> getAllHotelsByOwnerIdHandler(HttpSession session){
+        //Validate that the user is logged in and is an owner
+        userService.validateUserIsAuthenticated(session);
+        userService.validateUserIsOwner(session);
+
+        int ownerId = (int) session.getAttribute("userId");
+        return hotelService.getAllHotelsByUserId(ownerId);
     }
 
     //Method to get a specific hotel
