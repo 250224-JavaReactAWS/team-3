@@ -34,9 +34,8 @@ public class UserService {
     }
 
     if (!newUser.getPassword().matches(PASSWORD_REGEX)) {
-      throw new InvalidPasswordException("Invalid Password. Must be at least 8 characters long and " +
-              "need to contain one uppercase letter, one lowercase letter " +
-              "and one special character(@$!%*?&)");
+      throw new InvalidPasswordException("Invalid Password. Must be at least 8 characters long and need to contain one uppercase letter (A-Z)" +
+              "one lowercase letter (a-z), one number (0-9), and one special character(@$!%*?&)");
     }
 
     return Optional.of(userDAO.save(newUser));

@@ -90,7 +90,7 @@ export default function Login() {
             variant="h4"
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
-            Sign in
+            Login
           </Typography>
           <Box
             component="form"
@@ -146,7 +146,7 @@ export default function Login() {
               fullWidth
               variant="contained"
             >
-              Sign in
+              Login
             </Button>
           </Box>
           <Divider>or</Divider>
@@ -154,11 +154,11 @@ export default function Login() {
             <Typography sx={{ textAlign: 'center' }}>
               Don&apos;t have an account?{' '}
               <Link
-                href="/material-ui/getting-started/templates/sign-in/"
                 variant="body2"
-                sx={{ alignSelf: 'center' }}
+                sx={{ alignSelf: 'center', cursor: 'pointer'}}
+                onClick={() => navigate('/register')}
               >
-                Sign up
+                Register
               </Link>
             </Typography>
           </Box>

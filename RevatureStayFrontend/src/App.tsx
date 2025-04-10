@@ -38,7 +38,7 @@ export default function App() {
           <Routes>
             <Route path='/hotels' element={<Hotels />}/>
             <Route path='/login' element={<Login />}/>
-            <Route path='register' element={<Register />}/>
+            <Route path='/register' element={<Register />}/>
           </Routes>
         </BrowserRouter>
       </authContext.Provider>
