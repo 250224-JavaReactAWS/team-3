@@ -1,4 +1,4 @@
-export default interface IRoom {
+export default interface iRoom {
   roomId: number,
   type: "SINGLE" | "DOUBLE" | "TRIPLE" | "SUITE",
   beds: number,

@@ -4,8 +4,10 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { IHotel } from "../../interfaces/IHotel"
 
+
 function Hotels() {
 
+  
   const [hotels, setHotels] = useState<IHotel[]>([])
 
   useEffect(() => {
@@ -16,7 +18,11 @@ function Hotels() {
     }
 
     getHotels()
+<<<<<<< HEAD
+  },[])
+=======
   }, [])
+>>>>>>> 0aeec2616d0ef0541c9028c37331862ab354929f
 
 
 

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router"
 
 function HotelCard(props: IHotel) {
 
-
+  const navigate = useNavigate()
   // const [images, setImages] = useState<InImage[]>([])
 
   // useEffect(() => {
@@ -46,7 +46,7 @@ function HotelCard(props: IHotel) {
       </CardContent>
       <CardActions>
         <Button size="small">Book Now!</Button>
-        <Button size="small">View</Button>
+        <Button size="small" onClick={()=> {navigate(`/hotels/${props.hotelId}`)}}>View</Button>
         <Button size="small">Add Favorites</Button>
       </CardActions>
     </Card>

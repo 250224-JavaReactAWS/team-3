@@ -36,6 +36,10 @@ public class HotelService {
         return hotelDAO.findAll();
     }
 
+    public List<Hotel> getAllHotelsByUserId (int ownerId){
+        return hotelDAO.getAllByOwnerId(ownerId);
+    }
+
     //TODO Manage hotels
 
     //Method to add new hotel
