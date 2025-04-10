@@ -68,7 +68,18 @@ export const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'Poppins, Arial, sans-serif'
+    fontFamily: 'Poppins, Arial, sans-serif',
+    h6:{
+      fontSize:'1rem',
+      fontWeight: 600
+    },
+    h5:{
+      fontSize:'1.3rem',
+      fontWeight: 600
+    },
+    body1:{
+      fontSize:'0.9rem'
+    }
   },
   components:{
     MuiCssBaseline: {
