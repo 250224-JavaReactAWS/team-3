@@ -28,8 +28,19 @@ public class HotelController {
     }
     //Method to get all hotels
     @GetMapping
-    public List<Hotel> getAllHotels (){
+    public List<Hotel> getAllHotelsHandler(){
         return hotelService.getAllHotels();
+    }
+
+    @GetMapping("my-hotels")
+    //Method to get all hotels that belongs to a user
+    public List<Hotel> getAllHotelsByOwnerIdHandler(HttpSession session){
+        //Validate that the user is logged in and is an owner
+        userService.validateUserIsAuthenticated(session);
+        userService.validateUserIsOwner(session);
+
+        int ownerId = (int) session.getAttribute("userId");
+        return hotelService.getAllHotelsByUserId(ownerId);
     }
 
     //Method to get a specific hotel

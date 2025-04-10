@@ -4,8 +4,10 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { IHotel } from "../../interfaces/IHotel"
 
+
 function Hotels() {
 
+  
   const [hotels, setHotels] = useState<IHotel[]>([])
 
   useEffect(() => {
@@ -13,11 +15,10 @@ function Hotels() {
     let getHotels = async () => {
       let res = await axios.get<IHotel[]>('http://localhost:8080/hotels')
       setHotels(res.data)
-    
     }
 
     getHotels()
-  })
+  },[])
 
 
 
