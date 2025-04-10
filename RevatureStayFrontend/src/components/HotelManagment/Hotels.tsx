@@ -13,17 +13,16 @@ function Hotels() {
     let getHotels = async () => {
       let res = await axios.get<IHotel[]>('http://localhost:8080/hotels')
       setHotels(res.data)
-    
     }
 
     getHotels()
-  })
+  }, [])
 
 
 
   return (
     <Box sx={{width: "50%", margin:"auto"}}>
-      <h1 style={{textAlign:"center"}}>Hotels</h1>
+      <h1 style={{textAlign:"center", fontFamily: "Playfair Display"}}>Hotels</h1>
 
       <div style={{
         display: "grid",
@@ -33,7 +32,14 @@ function Hotels() {
         {
           hotels.map((hotel) => {
             return (
-              <HotelCard hotelId={hotel.hotelId} name={hotel.name} address={hotel.address} cellphoneNumber={hotel.cellphoneNumber} description={hotel.description} ></HotelCard>
+              <HotelCard
+                key={hotel.hotelId}
+                hotelId={hotel.hotelId} 
+                name={hotel.name} 
+                address={hotel.address} 
+                cellphoneNumber={hotel.cellphoneNumber} 
+                description={hotel.description} 
+              ></HotelCard>
             )
           })
         }

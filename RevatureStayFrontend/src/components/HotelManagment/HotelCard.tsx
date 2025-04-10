@@ -28,7 +28,9 @@ function HotelCard(props: IHotel) {
   
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card 
+      sx={{ maxWidth: 345 }}
+    >
       <CardMedia
         sx={{ height: 140 }}
         image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb1N_lcHUtjRMh7b31uYtH7n-xNzIZGZzefg&s"
