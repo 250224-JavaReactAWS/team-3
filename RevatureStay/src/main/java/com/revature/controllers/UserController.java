@@ -1,6 +1,8 @@
 package com.revature.controllers;
 
+import com.revature.exceptions.custom.user.UnauthenticatedException;
 import com.revature.models.User;
+import com.revature.models.UserRole;
 import com.revature.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -45,6 +47,17 @@ public class UserController {
       return userLogged.get();
     }
     return null;
+  }
+
+  @GetMapping("session")
+  public String getSessionRoleHandler( HttpSession session) {
+    if(session.getAttribute("role") == null) {
+      throw new UnauthenticatedException("Not logged in!");
+    }
+
+    UserRole role = (UserRole) session.getAttribute("role");
+
+    return role.toString();
   }
 }
 

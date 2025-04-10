@@ -18,13 +18,17 @@ function Hotels() {
     }
 
     getHotels()
+<<<<<<< HEAD
   },[])
+=======
+  }, [])
+>>>>>>> 0aeec2616d0ef0541c9028c37331862ab354929f
 
 
 
   return (
     <Box sx={{width: "50%", margin:"auto"}}>
-      <h1 style={{textAlign:"center"}}>Hotels</h1>
+      <h1 style={{textAlign:"center", fontFamily: "Playfair Display"}}>Hotels</h1>
 
       <div style={{
         display: "grid",
@@ -34,7 +38,14 @@ function Hotels() {
         {
           hotels.map((hotel) => {
             return (
-              <HotelCard hotelId={hotel.hotelId} name={hotel.name} address={hotel.address} cellphoneNumber={hotel.cellphoneNumber} description={hotel.description} ></HotelCard>
+              <HotelCard
+                key={hotel.hotelId}
+                hotelId={hotel.hotelId} 
+                name={hotel.name} 
+                address={hotel.address} 
+                cellphoneNumber={hotel.cellphoneNumber} 
+                description={hotel.description} 
+              ></HotelCard>
             )
           })
         }

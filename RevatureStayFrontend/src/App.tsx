@@ -9,21 +9,48 @@ import Dashboard from "./components/Owner/Dashboard";
 import Images from "./components/HotelManagment/Images Managment/Images";
 import Rooms from "./components/HotelManagment/Rooms Managment/Rooms";
 
+import Login from "./components/user/Login";
+import { createContext, useEffect, useState } from "react";
+import axios from "axios";
+
+
+
+export interface AuthContextType {
+  role: "CUSTOMER" | "OWNER" | "UNAUTHENTICATED",
+  setRole: (role: "CUSTOMER" | "OWNER" | "UNAUTHENTICATED") => void
+}
+
+export const authContext = createContext<AuthContextType | null>(null)
 
 export default function App() {
+  const [role, setRole] = useState<"CUSTOMER" | "OWNER" | "UNAUTHENTICATED">("UNAUTHENTICATED");
+
+  useEffect(() => {
+    axios.get<"CUSTOMER" | "OWNER">("http://localhost:8080/users/session", {withCredentials:true })
+      .then(res => {
+        setRole(res.data)
+        console.log(res);
+      })
+      .catch(err => {
+        setRole("UNAUTHENTICATED");
+        console.log(err);
+  })}, [])
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Hotels/>}/>
-          <Route path="/hotels/:hotelId" element={<HotelView/>}/>
-          <Route path="/my-hotels" element={<Dashboard/>}/>
-          <Route path="/my-hotels/:hotelId/rooms" element={<Rooms/>} />
-          <Route path="/my-hotels/:hotelId/images" element={<Images/>} />
-        </Routes>
-      </BrowserRouter>
+      <authContext.Provider value={{role, setRole}}>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path='/hotels' element={<Hotels />}/>
+            <Route path='/login' element={<Login />}/>
+            <Route path="/hotels/:hotelId" element={<HotelView/>}/>
+            <Route path="/my-hotels" element={<Dashboard/>}/>
+            <Route path="/my-hotels/:hotelId/rooms" element={<Rooms/>} />
+            <Route path="/my-hotels/:hotelId/images" element={<Images/>} />
+          </Routes>
+        </BrowserRouter>
+      </authContext.Provider>
     </ThemeProvider>
   )
 }
