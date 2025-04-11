@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -79,7 +80,7 @@ public class RoomService {
         );
 
         //If exists, validate the data
-        validateRoomData(roomToUpdate);
+        validateRoomData(updatedRoom);
 
         //Set new values
         roomToUpdate.setType(updatedRoom.getType() == null ? roomToUpdate.getType() : updatedRoom.getType());
@@ -119,4 +120,15 @@ public class RoomService {
         }
     }
 
+    @Override public boolean equals ( Object o ) {
+        if ( o == null || getClass() != o.getClass() ) {
+            return false;
+        }
+        RoomService that = ( RoomService ) o;
+        return Objects.equals(roomDAO, that.roomDAO);
+    }
+
+    @Override public int hashCode () {
+        return Objects.hashCode(roomDAO);
+    }
 }
