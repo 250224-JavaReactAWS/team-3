@@ -187,4 +187,287 @@ public class RoomServiceTests {
     assertEquals(rooms, roomsObtained);
     verify(mockedHotelDAO).findById(hotelId);
   }
+
+  // addNewRoom()
+  @Test public void givenInvalidTypeValue_whenAddNewRoom_thenThrowIllegalArgumentException () {
+    // Arrange
+    int hotelId = 1;
+    Hotel existingHotel = new Hotel(hotelId,
+                                    "test",
+                                    "test address",
+                                    "55-1234-6789",
+                                    "test description",
+                                    new User(),
+                                    new ArrayList<Room>(),
+                                    new ArrayList<Image>(),
+                                    new ArrayList<Reservation>(),
+                                    new ArrayList<Review>(),
+                                    new ArrayList<User>());
+    Room newInvalidRoom = new Room(null, 2, 2, 64.43, true, existingHotel);
+
+    when(mockedHotelDAO.findById(hotelId)).thenReturn(Optional.of(existingHotel));
+
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      roomService.addNewRoom(newInvalidRoom, hotelId);
+    });
+
+    assertEquals("Room type cannot be null", exception.getMessage());
+    verify(mockedHotelDAO).findById(hotelId);
+    verify(mockedRoomDAO, never()).save(any());
+  }
+
+  @Test public void givenInvalidBedsValue_whenAddNewRoom_thenThrowIllegalArgumentException () {
+    // Arrange
+    int hotelId = 1;
+    Hotel existingHotel = new Hotel(hotelId,
+                                    "test",
+                                    "test address",
+                                    "55-1234-6789",
+                                    "test description",
+                                    new User(),
+                                    new ArrayList<Room>(),
+                                    new ArrayList<Image>(),
+                                    new ArrayList<Reservation>(),
+                                    new ArrayList<Review>(),
+                                    new ArrayList<User>());
+    Room newInvalidRoom = new Room(RoomType.SINGLE, -2, 2, 64.43, true, existingHotel);
+
+    when(mockedHotelDAO.findById(hotelId)).thenReturn(Optional.of(existingHotel));
+
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      roomService.addNewRoom(newInvalidRoom, hotelId);
+    });
+
+    assertEquals("There must be at least one bed", exception.getMessage());
+    verify(mockedHotelDAO).findById(hotelId);
+    verify(mockedRoomDAO, never()).save(any());
+  }
+
+  @Test public void givenInvalidBathsValue_whenAddNewRoom_thenThrowIllegalArgumentException () {
+    // Arrange
+    int hotelId = 1;
+    Hotel existingHotel = new Hotel(hotelId,
+                                    "test",
+                                    "test address",
+                                    "55-1234-6789",
+                                    "test description",
+                                    new User(),
+                                    new ArrayList<Room>(),
+                                    new ArrayList<Image>(),
+                                    new ArrayList<Reservation>(),
+                                    new ArrayList<Review>(),
+                                    new ArrayList<User>());
+    Room newInvalidRoom = new Room(RoomType.DOUBLE, 2, -2, 64.43, true, existingHotel);
+
+    when(mockedHotelDAO.findById(hotelId)).thenReturn(Optional.of(existingHotel));
+
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      roomService.addNewRoom(newInvalidRoom, hotelId);
+    });
+
+    assertEquals("There must be at least one bath", exception.getMessage());
+    verify(mockedHotelDAO).findById(hotelId);
+    verify(mockedRoomDAO, never()).save(any());
+  }
+
+  @Test public void givenInvalidPriceValue_whenAddNewRoom_thenThrowIllegalArgumentException () {
+    // Arrange
+    int hotelId = 1;
+    Hotel existingHotel = new Hotel(hotelId,
+                                    "test",
+                                    "test address",
+                                    "55-1234-6789",
+                                    "test description",
+                                    new User(),
+                                    new ArrayList<Room>(),
+                                    new ArrayList<Image>(),
+                                    new ArrayList<Reservation>(),
+                                    new ArrayList<Review>(),
+                                    new ArrayList<User>());
+    // RoomType.TRIPLE, 3, 1, -55,.34, true, existingHotel
+    Room newInvalidRoom = new Room(RoomType.TRIPLE, 3, 1, -55.34, true, existingHotel);
+
+    when(mockedHotelDAO.findById(hotelId)).thenReturn(Optional.of(existingHotel));
+
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      roomService.addNewRoom(newInvalidRoom, hotelId);
+    });
+
+    assertEquals("Price must be positive", exception.getMessage());
+    verify(mockedHotelDAO).findById(hotelId);
+    verify(mockedRoomDAO, never()).save(any());
+  }
+
+  @Test public void givenValidRoomAndExistingHotel_whenAddNewRoom_thenShouldSaveAndReturned () {
+    // Arrange
+    int hotelId = 1;
+    Hotel existingHotel = new Hotel(hotelId,
+                                    "test",
+                                    "test address",
+                                    "55-1234-6789",
+                                    "test description",
+                                    new User(),
+                                    new ArrayList<Room>(),
+                                    new ArrayList<Image>(),
+                                    new ArrayList<Reservation>(),
+                                    new ArrayList<Review>(),
+                                    new ArrayList<User>());
+    Room newRoom = new Room(RoomType.TRIPLE, 2, 3, 75.42, true, existingHotel);
+
+    Room savedRoom = new Room(1, RoomType.TRIPLE, 2, 3, 75.42, true, existingHotel);
+
+    when(mockedHotelDAO.findById(hotelId)).thenReturn(Optional.of(existingHotel));
+    when(mockedRoomDAO.save(any(Room.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+    // Act
+    Optional<Room> result = roomService.addNewRoom(newRoom, hotelId);
+
+    // Assert
+    assertTrue(result.isPresent());
+    assertEquals(newRoom, result.get());
+    verify(mockedHotelDAO).findById(hotelId);
+    verify(mockedRoomDAO).save(newRoom);
+  }
+
+  // updateRoomById()
+  @Test
+  public void givenInvalidTypeValue_whenUpdateRoom_thenThrowIllegalArgumentException () {
+    // Arrange
+    int roomId = 1;
+    Room room = new Room(1,  RoomType.TRIPLE, 3, 2,
+                                   87.23, true, new Hotel());
+
+    Room roomWithInvalidType = new Room(1, null, 3, 2,
+                               87.23, true, new Hotel());
+
+    when(mockedRoomDAO.findById(roomId)).thenReturn(Optional.of(room));
+
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      roomService.updateRoomById(1, roomWithInvalidType);
+    });
+
+    assertEquals("Room type cannot be null", exception.getMessage());
+    verify(mockedRoomDAO).findById(roomId);
+    verify(mockedRoomDAO, never()).save(any());
+  }
+
+  @Test
+  public void givenInvalidBedsValue_whenUpdateRoom_thenThrowIllegalArgumentException () {
+    // Arrange
+    int roomId = 1;
+    Room room = new Room(1,  RoomType.TRIPLE, 3, 2,
+                         87.23, true, new Hotel());
+
+    Room roomWithInValidBeds = new Room(1, RoomType.TRIPLE, -3, 2,
+                               87.23, true, new Hotel());
+
+    when(mockedRoomDAO.findById(roomId)).thenReturn(Optional.of(room));
+
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      roomService.updateRoomById(roomId, roomWithInValidBeds);
+    });
+
+    assertEquals("There must be at least one bed", exception.getMessage());
+    verify(mockedRoomDAO).findById(roomId);
+    verify(mockedRoomDAO, never()).save(any());
+  }
+
+  @Test public void givenInvalidBathsValue_whenUpdateRoom_thenThrowIllegalArgumentException () {
+    // Arrange
+    int roomId = 1;
+    Room room = new Room(1,  RoomType.TRIPLE, 3, 2,
+                         87.23, true, new Hotel());
+
+    Room roomWithInvalidBaths = new Room(1, RoomType.TRIPLE, 3, -2,
+                               87.23, true, new Hotel());
+
+    when(mockedRoomDAO.findById(roomId)).thenReturn(Optional.of(room));
+
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      roomService.updateRoomById(roomId, roomWithInvalidBaths);
+    });
+
+    assertEquals("There must be at least one bath", exception.getMessage());
+    verify(mockedRoomDAO).findById(roomId);
+    verify(mockedRoomDAO, never()).save(any());
+  }
+
+  @Test public void givenInvalidPriceValue_whenUpdateRoom_thenThrowIllegalArgumentException () {
+    // Arrange
+    int roomId = 1;
+    Room existingRoom = new Room(roomId,  RoomType.TRIPLE, 3, 2,
+                         87.23, true, new Hotel());
+
+    Room roomWithInvalidPrice = new Room(roomId, RoomType.TRIPLE, 3, 2,
+                               -35.43, true, new Hotel());
+
+    when(mockedRoomDAO.findById(roomId)).thenReturn(Optional.of(existingRoom));
+
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      roomService.updateRoomById(roomId, roomWithInvalidPrice);
+    });
+
+    assertEquals("Price must be positive", exception.getMessage());
+    verify(mockedRoomDAO).findById(roomId);
+    verify(mockedRoomDAO, never()).save(any());
+  }
+
+  @Test public void givenValidValues_whenUpdateRoom_thenShouldUpdateAndReturned () {
+    // Arrange
+    int roomId = 1;
+    Room room = new Room(1,  RoomType.TRIPLE, 3, 2,
+                         87.23, true, new Hotel());
+
+    Room updateRoom = new Room(1, RoomType.SUITE, 4, 4,
+                               99.99, true, new Hotel());
+
+    when(mockedRoomDAO.findById(roomId)).thenReturn(Optional.of(room));
+    when(mockedRoomDAO.save(any(Room.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+    // Act
+    Optional<Room> updatedRoomResult = roomService.updateRoomById(roomId, updateRoom);
+
+    // Assert
+    assertTrue(updatedRoomResult.isPresent());
+    assertEquals(updateRoom, updatedRoomResult.get());
+    verify(mockedRoomDAO).findById(roomId);
+    verify(mockedRoomDAO).save(updateRoom);
+  }
+
+  // deleteRoom()
+  @Test
+  public void givenThatRoomDoesNotExists_whenDeleteRoom_thenThrowsRoomNotFoundException() {
+    // Arrange
+    int roomId = 1;
+    when(mockedRoomDAO.findById(roomId)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(RoomNotFoundException.class, () -> roomService.deleteRoom(roomId));
+    verify(mockedRoomDAO).findById(roomId);
+    verify(mockedRoomDAO, never()).delete(any());
+  }
+
+  @Test
+  public void givenThatRoomDoesExists_whenDeleteRoom_thenReturnVoid() {
+    // Arrange
+    int roomId = 1;
+    Room room = new Room(roomId, RoomType.TRIPLE, 2, 3, 75.42, true, new Hotel());
+
+    when(mockedRoomDAO.findById(roomId)).thenReturn(Optional.of(room));
+
+    //  Act
+    roomService.deleteRoom(roomId);
+
+    // Act & Assert
+    verify(mockedRoomDAO).findById(roomId);
+    verify(mockedRoomDAO).deleteById(roomId);
+  }
 }
