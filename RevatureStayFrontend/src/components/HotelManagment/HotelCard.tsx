@@ -8,24 +8,25 @@ import { useNavigate } from "react-router"
 function HotelCard(props: IHotel) {
 
   const navigate = useNavigate()
-  // const [images, setImages] = useState<InImage[]>([])
 
-  // useEffect(() => {
+  const [images, setImages] = useState<InImage[]>([])
+  const firstElement: string | undefined = images.length > 0 ? images[0].url : undefined;
 
-  //   let getImageByHotelId = async () => {
-  //     try {
-  //       let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
-  //       setImages(res.data)
-  //     } catch (error){
-  //       console.error("Error fetching hotel images ", error)
-  //     }
-      
-  //   }
 
-  //   getImageByHotelId()
-    
-  // })
   
+
+  let getImageByHotelId = async () => {
+    try {
+      let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
+      setImages(res.data)
+    } catch (error){
+      console.error("Error fetching hotel images ", error)
+    }
+    
+  }
+
+  getImageByHotelId()
+    
 
   return (
     <Card 
@@ -33,7 +34,7 @@ function HotelCard(props: IHotel) {
     >
       <CardMedia
         sx={{ height: 140 }}
-        image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb1N_lcHUtjRMh7b31uYtH7n-xNzIZGZzefg&s"
+        image={firstElement === undefined ? "https://cdn-icons-png.freepik.com/512/6269/6269517.png" : images[0].url}
         title={props.name}
       />
       <CardContent>
