@@ -16,6 +16,7 @@ export default function TitlebarImageList(props: {hotelId: any}) {
     const [shouldUpdate, setShouldUpdate] = useState(false)
 
     useEffect(() => {
+        
         let getAllImages = async() =>{
             try{
                 let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`, {withCredentials: true}) 
@@ -29,6 +30,24 @@ export default function TitlebarImageList(props: {hotelId: any}) {
         getAllImages()
 
     },[shouldUpdate])
+
+
+        
+    let deleteImage = async (imageId: any) =>{
+
+        console.log(imageId)
+        try{
+            let res = await axios.delete(`http://localhost:8080/hotels/${props.hotelId}/images/${imageId}`)
+            console.log(res)
+            
+        }catch(error){
+            console.error("Could not delete the image", error)
+        }
+        setShouldUpdate(!shouldUpdate)
+
+    }
+
+
     
 
     return (
@@ -52,6 +71,7 @@ export default function TitlebarImageList(props: {hotelId: any}) {
                     <IconButton
                         sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
                         aria-label={`info about ${item.alt}`}
+                        onClick={() => deleteImage(item.image_id)}
                     >
                         <Delete />
                     </IconButton>

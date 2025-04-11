@@ -39,7 +39,7 @@ function HotelCardOwner(props: IHotel) {
         <Typography gutterBottom variant="h5" component="div">
           {props.name}
         </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', height:40, overflow: "hidden" }}>
           {props.description}
         </Typography>
       </CardContent>
