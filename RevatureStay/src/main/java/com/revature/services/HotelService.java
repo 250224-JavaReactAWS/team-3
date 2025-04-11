@@ -3,7 +3,9 @@ package com.revature.services;
 import com.revature.exceptions.custom.hotel.*;
 import com.revature.exceptions.custom.user.ForbiddenActionException;
 import com.revature.exceptions.custom.user.OwnerDoesNotExistsException;
+import com.revature.exceptions.custom.user.UnauthenticatedException;
 import com.revature.models.Hotel;
+import com.revature.models.UserRole;
 import com.revature.repos.HotelDAO;
 import com.revature.repos.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,10 @@ public class HotelService {
     }
 
     public List<Hotel> getAllHotelsByUserId (int ownerId){
+        UserRole role = userDAO.findById(ownerId).get().getRole();
+        if(role != UserRole.OWNER){
+            throw new UnauthenticatedException("You need to be Owner");
+        }
         return hotelDAO.getAllByOwnerId(ownerId);
     }
 
