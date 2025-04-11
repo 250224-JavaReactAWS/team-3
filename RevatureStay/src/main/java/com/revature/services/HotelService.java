@@ -3,13 +3,16 @@ package com.revature.services;
 import com.revature.exceptions.custom.hotel.*;
 import com.revature.exceptions.custom.user.ForbiddenActionException;
 import com.revature.exceptions.custom.user.OwnerDoesNotExistsException;
+import com.revature.exceptions.custom.user.UnauthenticatedException;
 import com.revature.models.Hotel;
+import com.revature.models.UserRole;
 import com.revature.repos.HotelDAO;
 import com.revature.repos.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -37,6 +40,10 @@ public class HotelService {
     }
 
     public List<Hotel> getAllHotelsByUserId (int ownerId){
+        UserRole role = userDAO.findById(ownerId).get().getRole();
+        if(role != UserRole.OWNER){
+            throw new UnauthenticatedException("You need to be Owner");
+        }
         return hotelDAO.getAllByOwnerId(ownerId);
     }
 
@@ -94,7 +101,7 @@ public class HotelService {
         if (hotel.getName().length()<8){
             throw new InvalidHotelNameException("Hotel name must have at least 8 characters");
         }
-        if (hotel.getAddress().length()<10){
+        if (hotel.getAddress().length()<20){
             throw new InvalidHotelAddressException("Hotel address must have at least 20 characters");
         }
         if (!Pattern.matches(PHONE_NUMBER_REGEX,hotel.getCellphoneNumber())){
@@ -123,6 +130,15 @@ public class HotelService {
         }
     }
 
+    @Override
+    public boolean equals ( Object o ) {
+        if (o == null || getClass() != o.getClass()) return false;
+        HotelService that = (HotelService) o;
+        return Objects.equals(hotelDAO, that.hotelDAO) && Objects.equals(userDAO, that.userDAO);
+    }
 
-
+    @Override
+    public int hashCode () {
+        return Objects.hash(hotelDAO, userDAO);
+    }
 }
