@@ -18,7 +18,7 @@ function Hotels() {
     }
 
     getHotels()
-  },[])
+  }, [])
 
 
 
