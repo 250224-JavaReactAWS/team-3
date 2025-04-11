@@ -1,6 +1,6 @@
 export default interface iRoom {
   roomId: number,
-  type: "SINGLE" | "DOUBLE" | "TRIPLE" | "SUITE",
+  type: string,
   beds: number,
   baths: number,
   price: number,
