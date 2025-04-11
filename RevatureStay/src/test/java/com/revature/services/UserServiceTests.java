@@ -1,8 +1,6 @@
 package com.revature.services;
 
-import com.revature.exceptions.custom.user.EmailAlreadyRegisteredException;
-import com.revature.exceptions.custom.user.InvalidEmailFormatException;
-import com.revature.exceptions.custom.user.InvalidPasswordException;
+import com.revature.exceptions.custom.user.*;
 import com.revature.models.*;
 import com.revature.repos.UserDAO;
 import org.junit.jupiter.api.Test;
@@ -28,7 +26,7 @@ public class UserServiceTests {
 	UserService userService;
 
 
-	// register()
+	// Register()
 	@Test
 	public void givesUserWithEmailRegistered_whenRegister_thenThrowEmailAlreadyRegisteredException() {
 		// Arrange
@@ -115,41 +113,61 @@ public class UserServiceTests {
 		verify(mockedUserDAO).save(any(User.class));
 	}
 
-	/*
 	// login()
 	@Test
 	public void givesUserUnregistered_whenLogin_thenThrowWrongEmailException() {
-		// Arrange
+		String email = "johnDoe@mail.com";
+		User userToLogin = new User();
+		userToLogin.setEmail(email);
+		userToLogin.setPassword("Password1*");
 
-		// Act
+		when(mockedUserDAO.findUserByEmail(email)).thenReturn(Optional.empty());
 
-		// Assert
+		// Act & Assert
+		assertThrows(WrongEmailException.class, () -> userService.login(userToLogin));
+		verify(mockedUserDAO).findUserByEmail(email);
 	}
 
 	@Test
 	public void givesIncorrectPassword_whenLogin_thenThrowWrongPasswordException() {
-		// Arrange
+		String email = "johnDoe@mail.com";
+		String password = "Password1*";
 
-		// Act
+		User userToLogin = new User(1, "John", "Doe", email, "Pa$sW0rD",
+																UserRole.CUSTOMER, new ArrayList<Reservation>(), new ArrayList<Review>(),
+																new ArrayList<Hotel>(), new ArrayList<Hotel>());
 
-		// Assert
+		User userCredentials = new User();
+		userCredentials.setEmail(email);
+		userCredentials.setPassword(password);
+
+		when(mockedUserDAO.findUserByEmail(email)).thenReturn(Optional.of(userToLogin));
+
+		// Act & Assert
+		assertThrows(WrongPasswordException.class, () -> userService.login(userCredentials));
+		verify(mockedUserDAO).findUserByEmail(email);
 	}
 
 	@Test
 	public void givesCorrectCredentials_whenLogin_thenShouldBeReturned() {
-		// Arrange
+		String email = "johnDoe@mail.com";
+		String password = "Pa$sW0rD*";
 
-		// Act
+		User userToLogin = new User(1, "John", "Doe", email, password,
+																UserRole.CUSTOMER, new ArrayList<Reservation>(), new ArrayList<Review>(),
+																new ArrayList<Hotel>(), new ArrayList<Hotel>());
 
-		// Assert
+		User userCredentials = new User();
+		userCredentials.setEmail(email);
+		userCredentials.setPassword(password);
+
+		when(mockedUserDAO.findUserByEmail(email)).thenReturn(Optional.of(userToLogin));
+
+		Optional<User> userLogged = userService.login(userCredentials);
+
+		// Act & Assert
+		assertTrue(userLogged.isPresent());
+		assertEquals(userToLogin, userLogged.get());
+		verify(mockedUserDAO).findUserByEmail(email);
 	}
-
-	@Test
-	public void givesCorrectCredentials_whenLogin_thenShouldBeReturned() {
-		// Arrange
-
-		// Act
-
-		// Assert
-	}*/
 }
