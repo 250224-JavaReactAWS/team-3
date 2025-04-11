@@ -11,20 +11,20 @@ function dashboard() {
     const [myHotels, setMyHotels] = useState<IHotel[]>([])
 
     //Let's log in with an owner user
-    let login = async() =>{
-        try{
-            let res = await axios.post<{email: string, password: string}>("http://localhost:8080/users/login", 
-                {email: "ksollam6@mlb.com", password: "Password1*"},
-                {withCredentials: true}
-            )
-            console.log(res)
+    // let login = async() =>{
+    //     try{
+    //         let res = await axios.post<{email: string, password: string}>("http://localhost:8080/users/login", 
+    //             {email: "correo@correo.com", password: "Password1*"},
+    //             {withCredentials: true}
+    //         )
+    //         console.log(res)
 
-        }catch(error){
-            console.error("Could not log in ", error)
-        }
-    }
+    //     }catch(error){
+    //         console.error("Could not log in ", error)
+    //     }
+    // }
 
-    login()
+    // login()
 
 
     useEffect(() => {
@@ -59,7 +59,7 @@ function dashboard() {
         {
         myHotels.map((hotel) => {
             return (
-            <HotelCardOwner hotelId={hotel.hotelId} name={hotel.name} address={hotel.address} cellphoneNumber={hotel.cellphoneNumber} description={hotel.description} ></HotelCardOwner>
+            <HotelCardOwner key={hotel.hotelId} hotelId={hotel.hotelId} name={hotel.name} address={hotel.address} cellphoneNumber={hotel.cellphoneNumber} description={hotel.description} ></HotelCardOwner>
             )
         })
         }

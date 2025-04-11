@@ -1,17 +1,36 @@
-import { Box, Button, ImageList, ImageListItem, ImageListItemBar } from "@mui/material";
+import { Box, Button, ImageList, ImageListItem, ImageListItemBar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { IHotel } from "../../interfaces/IHotel";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { ArrowBack, Book, Camera, EventAvailable, ImportContacts, LocationPin, Phone } from "@mui/icons-material";
+import { InImage } from "../../interfaces/InImage";
 
 
 function HotelView() {
     
     const {hotelId} = useParams<{hotelId: string}>();
     const [hotel, setHotel] = useState<IHotel>();
-    const [shouldUpdate, setShouldUpdate] = useState(false)
     const navigate = useNavigate()
+
+
+    // const [images, setImages] = useState<InImage[]>([])
+
+    // useEffect(() => {
+
+    //   let getImageByHotelId = async () => {
+    //     try {
+    //       let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${hotelId}/images`)
+    //       setImages(res.data)
+    //     } catch (error){
+    //       console.error("Error fetching hotel images ", error)
+    //     }
+        
+    //   }
+
+    //   getImageByHotelId()
+      
+    // },[])
 
     useEffect(() => {
         
@@ -26,17 +45,17 @@ function HotelView() {
             }
         
         getHotel()
-    },[shouldUpdate])
+    },[])
 
 
   return (
     <>
-        <div style={{ width: "50%", margin: "auto", position:"relative"}}>
+        <div style={{ width: "50%", margin: "auto", position:"relative", marginTop:10}}>
 
-            <Button color="secondary" variant="contained" style={{position:"absolute", top:10}} onClick={() => navigate("/")} > <ArrowBack/> Back</Button>
+            <Button color="secondary" variant="contained" style={{position:"absolute", top:10}} onClick={() => navigate("/hotels")} > <ArrowBack/> Back</Button>
 
             <div style={{justifyItems:"center", alignItems:"center"}}>
-                <h1>{hotel?.name}</h1>
+                <Typography variant="h1" fontSize={"34px"}>{hotel?.name}</Typography>
                 <p><LocationPin sx={{verticalAlign:"middle"}}/> {hotel?.address}</p>
                 <p><Phone sx={{verticalAlign:"middle"}}/>{hotel?.cellphoneNumber}</p>
                 <p>{hotel?.description}</p>

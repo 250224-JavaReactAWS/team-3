@@ -13,7 +13,7 @@
     margin-top: 10px;
 }
 
-ul{
+.room-item-content{
     padding: 0;
     margin-left: 10px;
     display: flex;
