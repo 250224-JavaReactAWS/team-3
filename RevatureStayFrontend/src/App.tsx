@@ -8,11 +8,15 @@ import HotelView from "./components/HotelManagment/HotelView";
 import Dashboard from "./components/Owner/Dashboard";
 import Images from "./components/HotelManagment/Images Managment/Images";
 import Rooms from "./components/HotelManagment/Rooms Managment/Rooms";
-
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Login from "./components/user/Login";
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import Register from "./components/user/Register";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import ReservationDisplayer from "./components/reservations/viewReservation/ReservationDisplayer";
+import CreateReservationDisplayer from "./components/reservations/createReservation/CreateReservationDisplayer";
+import ReservationsList from "./components/reservations/viewMyReservations/ReservationsList";
 
 
 export interface AuthContextType {
@@ -37,6 +41,7 @@ export default function App() {
   })}, [])
   return (
     <ThemeProvider theme={theme}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
       <CssBaseline />
       <authContext.Provider value={{role, setRole}}>
         <BrowserRouter>
@@ -49,9 +54,13 @@ export default function App() {
             <Route path="/my-hotels" element={<Dashboard/>}/>
             <Route path="/my-hotels/:hotelId/rooms" element={<Rooms/>} />
             <Route path="/my-hotels/:hotelId/images" element={<Images/>} />
+            <Route path="/reservations" element={<ReservationsList/>}/>
+            <Route path="reservations/create/:hotelId" element= {<CreateReservationDisplayer />}/>
+            <Route path="/reservations/:reservationId" element= {<ReservationDisplayer/>}/>
           </Routes>
         </BrowserRouter>
       </authContext.Provider>
+      </LocalizationProvider>
     </ThemeProvider>
   )
 }
