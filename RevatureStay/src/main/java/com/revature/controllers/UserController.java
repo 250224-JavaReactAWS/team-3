@@ -59,5 +59,12 @@ public class UserController {
 
     return role.toString();
   }
+
+  @PostMapping("logout")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void logoutHandler(HttpSession session){
+    session.invalidate();
+  }
+
 }
 
