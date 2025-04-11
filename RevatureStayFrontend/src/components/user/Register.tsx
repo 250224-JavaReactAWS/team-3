@@ -1,4 +1,4 @@
-import {ChangeEvent, useState, SyntheticEvent, useContext} from 'react';
+import { ChangeEvent, useState, SyntheticEvent, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline'
@@ -32,7 +32,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
     'hsla(208, 53%, 32%, 0.45) -3px 9px 20px 0px'
 }));
 
-const SignUpContainer  = styled(Stack)(({ theme }) => ({
+const SignUpContainer = styled(Stack)(({ theme }) => ({
   minHeight: '100vh',
   padding: theme.spacing(2),
   overflowY: 'auto',
@@ -63,17 +63,17 @@ export default function Register() {
   const navigate = useNavigate();
 
 
-  let register = async() => {
-    try{
+  let register = async () => {
+    try {
       const role = roleBool ? "OWNER" : "CUSTOMER";
       let res = await axios.post<IUser>('http://localhost:8080/users/register',
-                                        {firstName, lastName, email, password, role},
-                                        {withCredentials: true}
+        { firstName, lastName, email, password, role },
+        { withCredentials: true }
       )
       roleReference?.setRole(res.data.role);
-      navigate('/hotels');
+      navigate('/');
 
-    } catch(err) {
+    } catch (err) {
       roleReference?.setRole("UNAUTHENTICATED")
     }
   }
@@ -81,7 +81,7 @@ export default function Register() {
   let submitForm = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
     let isValidate = true;
-    if(!(email || emailRegex.test(email))) {
+    if (!(email || emailRegex.test(email))) {
       setEmailError(true);
       setEmailErrorMessage('Invalid Email')
       isValidate = false
@@ -90,7 +90,7 @@ export default function Register() {
       setEmailErrorMessage('');
     }
 
-    if(!(password || passwordRegex.test(password))) {
+    if (!(password || passwordRegex.test(password))) {
       setPasswordError(true);
       setPasswordErrorMessage("Invalid Password. Must be at least 8 characters long and need to contain one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9), and one special character (@$!%*?&)")
       isValidate = false;
@@ -99,14 +99,14 @@ export default function Register() {
       setPasswordErrorMessage('');
     }
 
-    if(!(firstName || lastName)) {
+    if (!(firstName || lastName)) {
       setErrorName(true);
       isValidate = false;
     } else {
       setErrorName(false);
     }
 
-    if(isValidate) {
+    if (isValidate) {
       register();
     }
   }
@@ -212,13 +212,13 @@ export default function Register() {
               />
             </FormControl>
             <FormControl>
-              <FormControlLabel 
-              control={<Switch 
-                color='secondary'
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setRoleBool(e.target.checked)}
-              />} 
-              label="You wanna register as a owner?" />
-            </FormControl>   
+              <FormControlLabel
+                control={<Switch
+                  color='secondary'
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setRoleBool(e.target.checked)}
+                />}
+                label="You wanna register as a owner?" />
+            </FormControl>
             <Button
               type="submit"
               fullWidth
@@ -233,7 +233,7 @@ export default function Register() {
               You have an account?{' '}
               <Link
                 variant="body2"
-                sx={{ alignSelf: 'center', cursor: 'pointer'}}
+                sx={{ alignSelf: 'center', cursor: 'pointer' }}
                 onClick={() => navigate('/login')}
               >
                 Login

@@ -30,7 +30,7 @@ export default function App() {
   const [role, setRole] = useState<"CUSTOMER" | "OWNER" | "UNAUTHENTICATED">("UNAUTHENTICATED");
 
   useEffect(() => {
-    axios.get<"CUSTOMER" | "OWNER">("http://localhost:8080/users/session", {withCredentials:true })
+    axios.get<"CUSTOMER" | "OWNER">("http://localhost:8080/users/session", { withCredentials: true })
       .then(res => {
         setRole(res.data)
         console.log(res);
@@ -38,28 +38,29 @@ export default function App() {
       .catch(err => {
         setRole("UNAUTHENTICATED");
         console.log(err);
-  })}, [])
+      })
+  }, [])
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <CssBaseline />
-      <authContext.Provider value={{role, setRole}}>
-        <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route path='/hotels' element={<Hotels />}/>
-            <Route path='/login' element={<Login />}/>
-            <Route path='/register' element={<Register />}/>
-            <Route path="/hotels/:hotelId" element={<HotelView/>}/>
-            <Route path="/my-hotels" element={<Dashboard/>}/>
-            <Route path="/my-hotels/:hotelId/rooms" element={<Rooms/>} />
-            <Route path="/my-hotels/:hotelId/images" element={<Images/>} />
-            <Route path="/reservations" element={<ReservationsList/>}/>
-            <Route path="reservations/create/:hotelId" element= {<CreateReservationDisplayer />}/>
-            <Route path="/reservations/:reservationId" element= {<ReservationDisplayer/>}/>
-          </Routes>
-        </BrowserRouter>
-      </authContext.Provider>
+        <CssBaseline />
+        <authContext.Provider value={{ role, setRole }}>
+          <BrowserRouter>
+            <Navbar />
+            <Routes>
+              <Route path='/' element={<Hotels />} />
+              <Route path='/login' element={<Login />} />
+              <Route path='/register' element={<Register />} />
+              <Route path="/hotels/:hotelId" element={<HotelView />} />
+              <Route path="/my-hotels" element={<Dashboard />} />
+              <Route path="/my-hotels/:hotelId/rooms" element={<Rooms />} />
+              <Route path="/my-hotels/:hotelId/images" element={<Images />} />
+              <Route path="/reservations" element={<ReservationsList />} />
+              <Route path="reservations/create/:hotelId" element={<CreateReservationDisplayer />} />
+              <Route path="/reservations/:reservationId" element={<ReservationDisplayer />} />
+            </Routes>
+          </BrowserRouter>
+        </authContext.Provider>
       </LocalizationProvider>
     </ThemeProvider>
   )

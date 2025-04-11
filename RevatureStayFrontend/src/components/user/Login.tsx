@@ -1,4 +1,4 @@
-import {ChangeEvent, useState, SyntheticEvent, useContext} from 'react';
+import { ChangeEvent, useState, SyntheticEvent, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline'
@@ -58,17 +58,17 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  let login = async() => {
-    try{
+  let login = async () => {
+    try {
       let res = await axios.post<IUser>('http://localhost:8080/users/login',
-                                        {email, password},
-                                        {withCredentials: true}
+        { email, password },
+        { withCredentials: true }
       );
       console.log(res);
-      navigate('/hotels');
+      navigate('/');
 
       setError(false);
-    } catch(err) {
+    } catch (err) {
       console.log(err);
       roleReference?.setRole("UNAUTHENTICATED")
       setError(true);
@@ -155,7 +155,7 @@ export default function Login() {
               Don&apos;t have an account?{' '}
               <Link
                 variant="body2"
-                sx={{ alignSelf: 'center', cursor: 'pointer'}}
+                sx={{ alignSelf: 'center', cursor: 'pointer' }}
                 onClick={() => navigate('/register')}
               >
                 Register
