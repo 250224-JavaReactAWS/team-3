@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import com.revature.exceptions.custom.hotel.*;
+import com.revature.exceptions.custom.room.RoomNotFoundException;
 import com.revature.exceptions.custom.user.OwnerDoesNotExistsException;
 import com.revature.exceptions.custom.user.UnauthenticatedException;
 import com.revature.models.*;
@@ -563,4 +564,34 @@ public class HotelServiceTests {
   }
 
   // deleteHotelById()
+  @Test
+  public void givenThatHotelDoesNotExist_whenDeleteHotelById_thenThrowsHotelNotFoundException() {
+    // Arrange
+    int hotelId = 1;
+    when(mockedHotelDAO.findById(hotelId)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(HotelNotFoundException.class, () -> hotelService.deleteHotelById(hotelId));
+    verify(mockedHotelDAO).findById(hotelId);
+    verify(mockedHotelDAO, never()).delete(any());
+  }
+
+  @Test
+  public void givenThatRoomDoesExists_whenDeleteRoom_thenReturnVoid() {
+    // Arrange
+    int hotelId = 1;
+    Hotel hotelToDelete = new Hotel(hotelId, "Hotel luxury inn", "Av. avenue 12, Sreeet 3132",
+                                    "5590263751", "A hotel made for joy of the city",
+                                    new User(), new ArrayList<Room>(), new ArrayList<Image>(), new ArrayList<Reservation>(),
+                                    new ArrayList<Review>(), new ArrayList<User>());
+
+    when(mockedHotelDAO.findById(hotelId)).thenReturn(Optional.of(hotelToDelete));
+
+    //  Act
+    hotelService.deleteHotelById(hotelId);
+
+    // Act & Assert
+    verify(mockedHotelDAO).findById(hotelId);
+    verify(mockedHotelDAO).deleteById(hotelId);
+  }
 }
