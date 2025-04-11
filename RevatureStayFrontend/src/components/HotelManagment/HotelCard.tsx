@@ -41,12 +41,12 @@ function HotelCard(props: IHotel) {
         <Typography gutterBottom variant="h5" component="div">
           {props.name}
         </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', height:40, overflow: "hidden" }}>
           {props.description}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Book Now!</Button>
+        <Button size="small" onClick={() => {navigate(`/reservations/create/${props.hotelId}`)}}>Book Now!</Button>
         <Button size="small" onClick={()=> {navigate(`/hotels/${props.hotelId}`)}}>View</Button>
         <Button size="small">Add Favorites</Button>
       </CardActions>
