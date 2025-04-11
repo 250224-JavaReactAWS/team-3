@@ -1,21 +1,66 @@
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
-import { IRoom } from "../../../interfaces/IRoom";
+import { Button, Dialog, DialogContent, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import iRoom from "../../../interfaces/iRoom";
 import Room from "./Room";
 import { useState } from "react";
+import axios from "axios";
 
 interface IRoomSection{
-    rooms : IRoom[]
+    rooms : iRoom[],
+    setRooms:(value: iRoom[]) => void,
+    reservationId: number
 }
 
-function RoomSection({rooms}: IRoomSection){
+function RoomSection({rooms, reservationId, setRooms}: IRoomSection){
     const [roomType, setRoomType] = useState<string>("");
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
-    const handleDelete = (roomId:number) => {
-        console.log(`Deleted room ${roomId}`);
+    const [error, setError] = useState<string>("");
+
+    const handleDelete =async (roomId:number) => {
+        try{
+            let res = await axios.delete<any>(`http://localhost:8080/reservations/${reservationId}/rooms/${roomId}`,
+                {withCredentials: true}
+            )
+            let newRooms:iRoom[] = rooms.filter((room) => room.roomId !== roomId)
+            setRooms(newRooms);
+
+            } catch (error){
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.error || error.message;
+                setError(errorMessage);
+            } else {
+                setError('Unknown error: ' + error);
+            }    
+        }
+    }
+
+    const handleAdd = async (value:string) => {
+        try{
+            let res = await axios.post<iRoom>(`http://localhost:8080/reservations/${reservationId}/rooms`,
+                {type:value.toUpperCase()},
+                {withCredentials: true}
+            )
+            setRooms([...rooms, res.data]);
+            setRoomType("");
+            } catch (error){
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.error || error.message;
+                setError(errorMessage);
+            } else {
+                setError('Unknown error: ' + error);
+            }    
+        }
     }
 
     return(
         <>
+        <Dialog open={error ? true: false} onClose={() => {setError("")}}>
+            <DialogTitle>Upps something went wrong!</DialogTitle>
+            <DialogContent>
+                <Typography>
+                {`${error} . Please try again`}
+                </Typography>
+            </DialogContent>
+        </Dialog>
         <Grid container spacing={2}>
             {rooms.map((room) => (
             <Grid size={{xs:12, sm:6, md:3}} key={room.roomId}>
@@ -39,14 +84,14 @@ function RoomSection({rooms}: IRoomSection){
                         }}
                     sx={{width:"12rem"}}
                     >
-                        <MenuItem value={10}>SUITE</MenuItem>
-                        <MenuItem value={20}>DOUBLE</MenuItem>
-                        <MenuItem value={30}>SIMPLE</MenuItem>
+                        <MenuItem value={"SUITE"}>SUITE</MenuItem>
+                        <MenuItem value={"DOUBLE"}>DOUBLE</MenuItem>
+                        <MenuItem value={"SINGLE"}>SINGLE</MenuItem>
                     </Select>
                 </FormControl>
             </Grid>
             <Grid>
-                <Button variant="contained" color="primary" disabled={isDisabled}>
+                <Button variant="contained" color="primary" disabled={isDisabled} onClick={()=>{handleAdd(roomType)}}>
                     Add room
                 </Button>
             </Grid>    

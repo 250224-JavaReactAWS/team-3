@@ -6,12 +6,13 @@ import ReservationDetails from "./ReservationDetail";
 import RoomSection from "./RoomSection";
 import { useState } from "react";
 import iRoom from "../../../interfaces/iRoom";
+import OwnedReservationDetails from "./OwnedReservationDetails";
 
 interface IReservationView{
     reservation : iReservation
 }
 
-function Reservation({reservation}:IReservationView){
+function OwnedReservation({reservation}:IReservationView){
     const [success, setSuccess] = useState<boolean>(false);
     const [rooms, setRooms] = useState<iRoom[]>(reservation.rooms);
 
@@ -37,7 +38,7 @@ function Reservation({reservation}:IReservationView){
                 <Grid container spacing={2}>
                     <Grid size={12}>
                         <Typography variant="h5">Reservation Details</Typography>
-                        <ReservationDetails 
+                        <OwnedReservationDetails 
                             checkInDate={reservation.checkInDate} 
                             checkOutDate={reservation.checkOutDate}
                             status={reservation.status ? reservation.status : ""}
@@ -70,4 +71,4 @@ function Reservation({reservation}:IReservationView){
     );   
 }
 
-export default Reservation;
+export default OwnedReservation;

@@ -1,20 +1,29 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
-import iReservation from "../../../interfaces/iReservation";
-import ListedReservation from "./ListedReservation";
-import ReservationListHeader from "./ReservationListHeader";
 import { useEffect, useState } from "react";
+import { IHotel } from "../../../interfaces/IHotel";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import { Box, CircularProgress } from "@mui/material";
+import CreateReservation from "./CreateReservation";
 
-function ReservationsList(){
-    const [reservations, setReservations] = useState<iReservation[]>([]);
+function CreateReservationDisplayer(){
     const [error, setError] = useState<string>("");
+    const [hotel, setHotel] = useState<IHotel|null>(null);
+    const {hotelId} = useParams<{hotelId: string}>();
+
+    const defaultHotel : IHotel = {
+        hotelId: 0,
+        name: "",
+        address: "",
+        cellphoneNumber:  "",
+        description: "",
+    }
 
     useEffect(() => {   
     
         let getHotel = async () => {
             try{
-                let res = await axios.get<iReservation[]>(`http://localhost:8080/reservations`, {withCredentials:true})
-                setReservations(res.data)
+                let res = await axios.get<IHotel>(`http://localhost:8080/hotels/${hotelId}`)
+                setHotel(res.data)
             } catch (error){
                 if (axios.isAxiosError(error)) {
                     const errorMessage = error.response?.data?.error || error.message;
@@ -28,7 +37,7 @@ function ReservationsList(){
         getHotel();
     },[])
 
-    if(reservations.length===0 && !error){
+    if(!hotel && !error){
         return(
             
             <Box
@@ -53,20 +62,8 @@ function ReservationsList(){
     }
 
     return(
-        <>
-            <ReservationListHeader/>
-            <div>
-                {reservations.length ===0 ? (
-                    <Typography variant="body1">There are not reservations to show</Typography>
-                ):(
-                    reservations.map((reservation, index )=>(
-                        <ListedReservation key={`${reservation}-${index}`} {...reservation}/>
-                    ))
-                )
-                }
-            </div>
-        </>
+        <CreateReservation hotel={hotel ?? defaultHotel}/>
     );
 }
 
-export default ReservationsList;
+export default CreateReservationDisplayer;

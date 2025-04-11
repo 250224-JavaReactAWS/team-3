@@ -1,7 +1,7 @@
 import { Container, Grid, Paper, Typography } from "@mui/material";
-import { IUser } from "../../../interfaces/IUser";
+import iUser from "../../../interfaces/iUser";
 
-function UserSection(user : IUser){
+function UserSection(user : iUser){
     return (
         // <Container>
             <Paper 

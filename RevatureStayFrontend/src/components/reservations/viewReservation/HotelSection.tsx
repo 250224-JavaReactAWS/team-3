@@ -1,4 +1,4 @@
-import { Container, Grid, Paper, Typography } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import { IHotel } from "../../../interfaces/IHotel";
 
 function HotelSection(hotel:IHotel){

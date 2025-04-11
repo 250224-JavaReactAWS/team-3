@@ -1,7 +1,6 @@
-import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Grid, Paper, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
-import { useState } from "react";
 
 interface IReservationDetailsForm{
     checkin:Dayjs | null,
@@ -9,9 +8,13 @@ interface IReservationDetailsForm{
     guests:number,
     setCheckin: (value :Dayjs | null)=>void,
     setCheckout: (value :Dayjs | null)=>void,
-    setGuests:(value: number)=>void
+    setGuests:(value: number)=>void,
+    checkinError:boolean,
+    checkoutError:boolean,
+    guestsError:boolean
 }
-function ReservationDetailsForm({checkin, setCheckin, checkout, setCheckout, guests, setGuests}:IReservationDetailsForm){
+function ReservationDetailsForm(fields:IReservationDetailsForm){
+    
     
     
     return (
@@ -26,29 +29,44 @@ function ReservationDetailsForm({checkin, setCheckin, checkout, setCheckout, gue
                 <Grid size={{xs:12, sm:6}}>
                     <Typography variant="h6">Check-In Date:</Typography>
                     <DatePicker 
-                        value={checkin} 
+                        value={fields.checkin} 
                         onChange={(value) => {
-                            setCheckin(value);
+                            fields.setCheckin(value);
                         }}
+                        slotProps={{
+                            textField: {
+                              error: fields.checkinError, 
+                              helperText: fields.checkinError ? 'You must provide a value' : '', 
+                            },
+                          }}
+                  
                     />
                 </Grid>
                 <Grid size={{xs:12, sm:6}}>
                     <Typography variant="h6">Check-Out Date:</Typography>
                     <DatePicker 
-                        value={checkout}
+                        value={fields.checkout}
                         onChange={(value) => {
-                            setCheckout(value);
+                            fields.setCheckout(value);
                         }}
+                        slotProps={{
+                            textField: {
+                              error: fields.checkoutError, 
+                              helperText: fields.checkoutError ? 'You must provide a value' : '', 
+                            },
+                          }}
                     />
                 </Grid>
                 <Grid size={{xs:12, sm:6}}>
                     <Typography variant="h6">Number of Guests:</Typography>
                     <TextField 
-                        defaultValue={guests} 
+                        defaultValue={fields.guests} 
                         type="number"
                         onChange={(event) => {
-                            setGuests(parseInt(event.target.value));
+                            fields.setGuests(parseInt(event.target.value));
                         }}
+                        error={fields.guestsError}
+                        helperText={fields.guestsError ? 'You must provide a valid number' : ''}
                     />
                 </Grid>
             </Grid>

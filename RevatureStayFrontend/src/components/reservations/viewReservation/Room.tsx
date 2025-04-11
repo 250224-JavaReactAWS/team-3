@@ -1,8 +1,8 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Typography } from "@mui/material";
-import { IRoom } from "../../../interfaces/IRoom";
+import { Card, CardActions, CardContent, CardHeader, Typography } from "@mui/material";
+import iRoom from "../../../interfaces/iRoom";
 import DeleteRoomButton from "./DeleteRoomButton";
 interface IRoomCard{
-    room : IRoom,
+    room : iRoom,
     handleDelete: (reservationId:number)=>void
 }
 

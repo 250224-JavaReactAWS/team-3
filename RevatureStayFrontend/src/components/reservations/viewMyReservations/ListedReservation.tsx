@@ -1,17 +1,12 @@
-import { Box, Typography, Grid, Button } from "@mui/material";
-import { IReservation } from "../../../interfaces/IReservation";
+import { Box, Grid, Button } from "@mui/material";
+import iReservation  from "../../../interfaces/iReservation";
 import ReservationAttribute from "./ReservationAttribute";
-import { useState } from "react";
-import ReservationDetailsButton from "./ReservationDetailsButton";
-import ReservationDetails from "./ReservationDetails";
-
-function ListedReservation( reservation : IReservation ){
-  const [open, setOpen] = useState(false);
+import { useNavigate } from "react-router-dom";
+function ListedReservation( reservation : iReservation ){
 
   const totalPrice = reservation.rooms.reduce((sum, room) => sum + room.price, 0);
+  const navigate = useNavigate();
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   return (
     <Box
@@ -22,7 +17,6 @@ function ListedReservation( reservation : IReservation ){
         border: "1px solid #ccc",
         borderRadius: "8px",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-        bgcolor:"#E2FCEF"
       }}
     >
       <Grid container spacing={2}>
@@ -34,9 +28,8 @@ function ListedReservation( reservation : IReservation ){
         <ReservationAttribute value={totalPrice.toString()} size={1}/>
         
         <Grid size={2}>
-            <ReservationDetailsButton handler = {handleOpen}/>
+            <Button onClick={()=>navigate(`/reservations/${reservation.reservationId}` )}>Details</Button>
         </Grid>
-        <ReservationDetails reservation={reservation} handleClose={handleClose} open = {open} totalPrice={totalPrice}/>
       </Grid>
 
     </Box>
