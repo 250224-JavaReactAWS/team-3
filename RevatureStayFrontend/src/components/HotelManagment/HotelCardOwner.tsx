@@ -2,7 +2,7 @@ import { Card, CardMedia, CardContent, Typography, CardActions, Button } from "@
 import { IHotel } from "../../interfaces/IHotel"
 import { useNavigate } from "react-router"
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { InImage } from "../../interfaces/InImage"
 
 function HotelCardOwner(props: IHotel) {
@@ -15,19 +15,22 @@ function HotelCardOwner(props: IHotel) {
 
 
   
+  useEffect(() => {
 
-  let getImageByHotelId = async () => {
-    try {
-      let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
-      setImages(res.data)
-    } catch (error){
-      console.error("Error fetching hotel images ", error)
+    let getImageByHotelId = async () => {
+      try {
+        let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
+        setImages(res.data)
+      } catch (error){
+        console.error("Error fetching hotel images ", error)
+      }
+      
     }
-    
-  }
+  
+    getImageByHotelId()
 
-  getImageByHotelId()
-
+  }, [])
+  
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
