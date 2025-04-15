@@ -1,4 +1,4 @@
-import { ChangeEvent, JSX, use, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 
 import axios from "axios"
 import { useNavigate, useParams } from "react-router-dom"
@@ -7,6 +7,7 @@ import './Rooms.css'
 import iRoom from "../../../interfaces/iRoom"
 import React from "react"
 import { Bed, Bathroom, AttachMoney, CheckBox, Edit, Delete, Add, ArrowBack } from "@mui/icons-material"
+import { URL } from "../../../util/path"
 
 
 
@@ -34,7 +35,7 @@ function Rooms() {
   useEffect(() =>{
     let getRooms = async () =>{
         try{
-            let res = await axios.get<iRoom[]>(`http://localhost:8080/hotels/${hotelId}/rooms` , {withCredentials: true})
+            let res = await axios.get<iRoom[]>(`${URL}/hotels/${hotelId}/rooms` , {withCredentials: true})
             setRooms(res.data)
         }
         catch(error){

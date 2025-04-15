@@ -1,4 +1,4 @@
-import { Card, CardMedia, CardContent, Typography, CardActions, Button, Box, CircularProgress } from "@mui/material"
+import { Card, CardMedia, CardContent, Typography, CardActions, Button } from "@mui/material"
 import { IHotel } from "../../interfaces/IHotel"
 import { useNavigate } from "react-router"
 import axios from "axios"
@@ -17,7 +17,7 @@ function HotelCardOwner(props: IHotel) {
 
     let getImageByHotelId = async () => {
       try {
-        let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
+        let res = await axios.get<InImage[]>(`${URL}/hotels/${props.hotelId}/images`)
         setImages(res.data)
       } catch (error){
         console.error("Error fetching hotel images ", error)

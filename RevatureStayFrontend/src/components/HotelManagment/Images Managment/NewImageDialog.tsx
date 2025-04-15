@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 import { ChangeEvent } from 'react';
+import { URL } from '../../../util/path';
 
 
 export default function ImgFormDialog(props: {hotelId: any ,open:boolean, onClose: () => void, updateImages: () => void}) {
@@ -26,7 +27,7 @@ export default function ImgFormDialog(props: {hotelId: any ,open:boolean, onClos
             onSubmit:async (event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
               try{
-                let res = await axios.post<{url: string, alt: string}>(`http://localhost:8080/hotels/${props.hotelId}/images`, 
+                let res = await axios.post<{url: string, alt: string}>(`${URL}/hotels/${props.hotelId}/images`, 
                     {
                         url: url,
                         alt: alt

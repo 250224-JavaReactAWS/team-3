@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { IHotel } from "../../interfaces/IHotel";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { ArrowBack, Book, Camera, EventAvailable, ImportContacts, LocationPin, Phone } from "@mui/icons-material";
-import { InImage } from "../../interfaces/InImage";
+import { ArrowBack, Camera, ImportContacts, LocationPin, Phone } from "@mui/icons-material";
+import { URL } from "../../util/path";
 
 
 
@@ -37,7 +37,7 @@ function HotelView() {
         
             let getHotel = async () => {
                 try {
-                    let res = await axios.get<IHotel>(`http://localhost:8080/hotels/${hotelId}`)
+                    let res = await axios.get<IHotel>(`${URL}/hotels/${hotelId}`)
                     setHotel(res.data)
                 }
                 catch (error){

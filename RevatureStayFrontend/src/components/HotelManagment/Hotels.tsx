@@ -3,6 +3,7 @@ import HotelCard from "./HotelCard"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { IHotel } from "../../interfaces/IHotel"
+import { URL } from "../../util/path"
 
 
 function Hotels() {
@@ -13,7 +14,7 @@ function Hotels() {
   useEffect(() => {
 
     let getHotels = async () => {
-      let res = await axios.get<IHotel[]>(`http://localhost:8080/hotels`)
+      let res = await axios.get<IHotel[]>(`${URL}/hotels`)
       setHotels(res.data)
     }
 
