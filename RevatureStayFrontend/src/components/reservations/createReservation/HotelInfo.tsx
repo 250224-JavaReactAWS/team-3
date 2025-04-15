@@ -1,4 +1,4 @@
-import { Card, CardMedia, CardContent, Typography, Box, CircularProgress } from "@mui/material"
+import { Card, CardMedia, CardContent, Typography } from "@mui/material"
 import { IHotel } from "../../../interfaces/IHotel";
 
 interface IHotelInfo{

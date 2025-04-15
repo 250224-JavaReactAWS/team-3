@@ -1,7 +1,7 @@
 import { Alert, Button, Dialog, DialogContent, DialogTitle, Grid, Paper, Snackbar, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import axios from "axios";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs  from "dayjs";
 import { useState } from "react";
 import iReservation from "../../../interfaces/iReservation";
 import {URL} from "../../../util/path";

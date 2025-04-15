@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { IHotel } from "../../../interfaces/IHotel";
 import axios from "axios";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import CreateReservation from "./CreateReservation";
 import { authContext, AuthContextType } from "../../../App";
@@ -13,7 +13,6 @@ function CreateReservationDisplayer(){
     const [hotel, setHotel] = useState<IHotel|null>(null);
     const {hotelId} = useParams<{hotelId: string}>();
     const roleReference = useContext<AuthContextType|null>(authContext);
-    const navigate = useNavigate();
     const defaultHotel : IHotel = {
         hotelId: 0,
         name: "",

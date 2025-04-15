@@ -18,7 +18,7 @@ function RoomSection({rooms, reservationId, setRooms}: IRoomSection){
 
     const handleDelete =async (roomId:number) => {
         try{
-            let res = await axios.delete<any>(`${URL}/reservations/${reservationId}/rooms/${roomId}`,
+                await axios.delete<any>(`${URL}/reservations/${reservationId}/rooms/${roomId}`,
                 {withCredentials: true}
             )
             let newRooms:iRoom[] = rooms.filter((room) => room.roomId !== roomId)

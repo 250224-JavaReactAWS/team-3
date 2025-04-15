@@ -95,9 +95,10 @@ function ReservationDetails({reservationId, checkInDate, checkOutDate, numGuests
 
     const cancelHandler = async () => {
         try{
-            let res = await axios.patch<iReservation>(`${URL}/reservations/${reservationId}`,
+            await axios.patch<iReservation>(`${URL}/reservations/${reservationId}`,
                 {status:"CANCELLED"},
                 {withCredentials: true}
+                
             )
             setCancelResponse("Your reservation was cancelled");
 
