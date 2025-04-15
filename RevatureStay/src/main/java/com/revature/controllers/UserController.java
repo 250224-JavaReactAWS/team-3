@@ -27,10 +27,13 @@ public class UserController {
   }
 
   @PostMapping("register")
-  public ResponseEntity<User> registerHandler(@RequestBody User user){
+  public ResponseEntity<User> registerHandler(@RequestBody User user, HttpSession session){
     Optional<User> userToBeRegister = userService.Register(user);
 
     userToBeRegister.ifPresent(value -> logger.info("A new user was created with the id: {}", value.getUserId()));
+
+    session.setAttribute("userId", userToBeRegister.get().getUserId());
+    session.setAttribute("role", userToBeRegister.get().getRole());
 
     return userToBeRegister.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED))
                            .orElseGet(() -> ResponseEntity.badRequest().build() );

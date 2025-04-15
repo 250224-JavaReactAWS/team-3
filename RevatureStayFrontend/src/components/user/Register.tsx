@@ -73,7 +73,6 @@ export default function Register() {
       )
       roleReference?.setRole(res.data.role);
       navigate('/');
-
     } catch (err) {
       roleReference?.setRole("UNAUTHENTICATED")
       console.log(err);
