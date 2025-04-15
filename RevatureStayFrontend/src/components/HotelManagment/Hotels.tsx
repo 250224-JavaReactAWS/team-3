@@ -13,7 +13,7 @@ function Hotels() {
   useEffect(() => {
 
     let getHotels = async () => {
-      let res = await axios.get<IHotel[]>('http://localhost:8080/hotels')
+      let res = await axios.get<IHotel[]>(`http://localhost:8080/hotels`)
       setHotels(res.data)
     }
 

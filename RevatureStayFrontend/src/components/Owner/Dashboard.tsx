@@ -11,8 +11,10 @@ import HotelFormDialog from '../HotelManagment/NewHotelDialog'
 function dashboard() {
 
     const [myHotels, setMyHotels] = useState<IHotel[]>([])
+    //const [shouldUpdate, setShouldUpdate] = useState(false)
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
+    const [update, setUpdate] = useState(false)
 
     // Function to open the dialog
     const handleOpen = () => {
@@ -24,21 +26,10 @@ function dashboard() {
         setOpen(false);
     };
 
-    // // Let's log in with an owner user
-    // let login = async() =>{
-    //     try{
-    //         let res = await axios.post<{email: string, password: string}>("http://localhost:8080/users/login", 
-    //             {email: "correo@correo.com", password: "Password1*"},
-    //             {withCredentials: true}
-    //         )
-    //         console.log(res)
+    const updateHotels = () =>{
+        setUpdate(!update)
+    }
 
-    //     }catch(error){
-    //         console.error("Could not log in ", error)
-    //     }
-    // }
-
-    // login()
 
 
     useEffect(() => {
@@ -55,7 +46,7 @@ function dashboard() {
 
 
         getMyHotels()
-    }, [])
+    }, [update])
     
 
 
@@ -81,7 +72,15 @@ function dashboard() {
         {
         myHotels.map((hotel) => {
             return (
-            <HotelCardOwner key={hotel.hotelId} hotelId={hotel.hotelId} name={hotel.name} address={hotel.address} cellphoneNumber={hotel.cellphoneNumber} description={hotel.description} ></HotelCardOwner>
+            <HotelCardOwner
+                //Props
+                key={hotel.hotelId}
+                hotelId={hotel.hotelId} 
+                name={hotel.name} 
+                address={hotel.address} 
+                cellphoneNumber={hotel.cellphoneNumber} 
+                description={hotel.description}>
+            </HotelCardOwner>
             )
         })
         }
@@ -92,7 +91,7 @@ function dashboard() {
     </Box>
 
     {/* Render the ImgFormDialog component conditionally */}
-        {open && <HotelFormDialog open={open} onClose={handleClose} /> }
+        {open && <HotelFormDialog open={open} onClose={handleClose} updateHotels={updateHotels} /> }
     </>
   )
 }

@@ -53,8 +53,8 @@ export default function App() {
               <Route path='/register' element={<Register />} />
               <Route path="/hotels/:hotelId" element={<HotelView />} />
               <Route path="/my-hotels" element={<Dashboard />} />
-              <Route path="/my-hotels/:hotelId/rooms" element={<Rooms />} />
-              <Route path="/my-hotels/:hotelId/images" element={<Images />} />
+              <Route path="/my-hotels/:hotelId/:hotelName/rooms" element={<Rooms />} />
+              <Route path="/my-hotels/:hotelId/:hotelName/images" element={<Images />} />
               <Route path="/reservations" element={<ReservationsList />} />
               <Route path="reservations/create/:hotelId" element={<CreateReservationDisplayer />} />
               <Route path="/reservations/:reservationId" element={<ReservationDisplayer />} />

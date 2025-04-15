@@ -10,7 +10,7 @@ import axios from 'axios';
 import { ChangeEvent } from 'react';
 
 
-export default function HotelFormDialog(props: {open:boolean, onClose: () => void }) {
+export default function HotelFormDialog(props: {open:boolean, onClose: () => void, updateHotels: () => void }) {
 
     const [name, setName] = React.useState("")
     const [address, setAddress] = React.useState("")
@@ -39,7 +39,7 @@ export default function HotelFormDialog(props: {open:boolean, onClose: () => voi
                 )
                 
                 console.log(res);
-                
+                props.updateHotels()
               }catch(error){
                 console.error("Could not add new hotel ", error)
               }

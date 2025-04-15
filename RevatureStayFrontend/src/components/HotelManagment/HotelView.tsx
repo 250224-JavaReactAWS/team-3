@@ -7,6 +7,7 @@ import { ArrowBack, Book, Camera, EventAvailable, ImportContacts, LocationPin, P
 import { InImage } from "../../interfaces/InImage";
 
 
+
 function HotelView() {
     
     const {hotelId} = useParams<{hotelId: string}>();
