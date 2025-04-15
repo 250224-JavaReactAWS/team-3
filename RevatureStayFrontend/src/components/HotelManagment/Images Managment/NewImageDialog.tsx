@@ -10,7 +10,7 @@ import axios from 'axios';
 import { ChangeEvent } from 'react';
 
 
-export default function ImgFormDialog(props: {hotelId: any ,open:boolean, onClose: () => void }) {
+export default function ImgFormDialog(props: {hotelId: any ,open:boolean, onClose: () => void, updateImages: () => void}) {
 
     const [url, setUrl] = React.useState("")
     const [alt, setAlt] = React.useState("")
@@ -34,8 +34,8 @@ export default function ImgFormDialog(props: {hotelId: any ,open:boolean, onClos
                     {withCredentials: true}
                 )
                 
-                console.log(res);
-                
+                console.log(res)
+                props.updateImages()
               }catch(error){
                 console.error("Could not submit your image ", error)
               }

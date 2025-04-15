@@ -14,6 +14,7 @@ function Rooms() {
 
   const [rooms, setRooms] = useState<iRoom[]>([])
   const {hotelId} = useParams<{hotelId: string}>()
+  const {hotelName} = useParams<{hotelName: string}>()
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const [currentRoom, setCurrentRoom] = useState<iRoom>()
@@ -81,8 +82,9 @@ function Rooms() {
 
   return (
     <div style={{width:"50%", margin:"auto", position:"relative"}}>
-        <Button color="secondary" variant="contained" style={{position:"absolute", top:10, right: 10}} onClick={() => navigate("/my-hotels")} > <ArrowBack/> Back</Button>
-        <Typography variant="h1" fontSize={"28px"} marginTop={2}> Room Managment </Typography>
+        <Button color="secondary" variant="contained" style={{position:"absolute", top:10, right: -120}} onClick={() => navigate("/my-hotels")} > <ArrowBack/> Back</Button>
+        <Typography variant="h1" fontSize={"28px"} marginTop={2} textAlign={"center"}> {hotelName} </Typography>
+        <Typography variant="h2" fontSize={"26px"} marginTop={2}> Room Management </Typography>
         <Typography fontSize={"18px"} marginTop={3}> Add, delete or edit your hotel rooms </Typography>
 
         <div className="room-container">

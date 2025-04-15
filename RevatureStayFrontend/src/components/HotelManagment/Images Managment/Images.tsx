@@ -9,8 +9,10 @@ import { createContext, useContext, useState } from "react"
 function Images() {
 
   const {hotelId} = useParams<{hotelId: string}>()
+  const {hotelName} = useParams<{hotelName: string}>()
   const [open, setOpen] = useState(false);
   const navigate = useNavigate()
+  const [shouldUpdateImages, setShouldUpdateImages] = useState(false)
 
     // Function to open the dialog
     const handleOpen = () => {
@@ -22,22 +24,28 @@ function Images() {
         setOpen(false);
     };
 
+    //Function to update images
+    const updateImages = () => {
+      setShouldUpdateImages(!shouldUpdateImages)
+    }
+
 
   return (
     <>
     <div style={{width:"50%", margin: "auto", justifyItems:"center", position:"relative"}}>
-      <Button color="secondary" variant="contained" style={{position:"absolute", top:10, right: 10}} onClick={() => navigate("/my-hotels")} > <ArrowBack/> Back</Button>
-      <Typography variant="h1" fontSize={34} sx={{margin: "10px 0"}}>Image Managment</Typography>
+      <Button color="secondary" variant="contained" style={{position:"absolute", top:10, right: -120}} onClick={() => navigate("/my-hotels")} > <ArrowBack/> Back</Button>
+      <Typography variant="h1" fontSize={"28px"} marginTop={2} textAlign={"center"}> {hotelName} </Typography>
+      <Typography variant="h2" fontSize={"26px"} marginTop={2}> Image Management </Typography>
       <Fab color="primary" aria-label="add" onClick={() => handleOpen()}>
         <Add />
       </Fab>
       
-      <ImageContainer hotelId={hotelId}/>
+      <ImageContainer hotelId={hotelId} shouldUpdateImages={shouldUpdateImages} />
 
     </div>
 
     {/* Render the ImgFormDialog component conditionally */}
-    {open && <ImgFormDialog hotelId={hotelId} open={open} onClose={handleClose} /> }
+    {open && <ImgFormDialog hotelId={hotelId} open={open} onClose={handleClose} updateImages={updateImages} /> }
   
     </>
   )

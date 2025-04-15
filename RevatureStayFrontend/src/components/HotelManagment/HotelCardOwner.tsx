@@ -1,8 +1,8 @@
-import { Card, CardMedia, CardContent, Typography, CardActions, Button } from "@mui/material"
+import { Card, CardMedia, CardContent, Typography, CardActions, Button, Box, CircularProgress } from "@mui/material"
 import { IHotel } from "../../interfaces/IHotel"
 import { useNavigate } from "react-router"
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { InImage } from "../../interfaces/InImage"
 
 function HotelCardOwner(props: IHotel) {
@@ -13,20 +13,21 @@ function HotelCardOwner(props: IHotel) {
   const [images, setImages] = useState<InImage[]>([])
   const firstElement: string | undefined = images.length > 0 ? images[0].url : undefined;
 
+  useEffect(() => {
 
-  
-
-  let getImageByHotelId = async () => {
-    try {
-      let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
-      setImages(res.data)
-    } catch (error){
-      console.error("Error fetching hotel images ", error)
+    let getImageByHotelId = async () => {
+      try {
+        let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
+        setImages(res.data)
+      } catch (error){
+        console.error("Error fetching hotel images ", error)
+      }
+      
     }
-    
-  }
+  
+    getImageByHotelId()
 
-  getImageByHotelId()
+  }, [])
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -44,8 +45,8 @@ function HotelCardOwner(props: IHotel) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button color="secondary" size="small" onClick={()=> {navigate(`/my-hotels/${props.hotelId}/rooms`)}}>Manage Rooms</Button>
-        <Button color="secondary" size="small" onClick={()=> {navigate(`/my-hotels/${props.hotelId}/images`)}}>Manage Images</Button>
+        <Button color="secondary" size="small" onClick={()=> {navigate(`/my-hotels/${props.hotelId}/${props.name}/rooms`)}}>Manage Rooms</Button>
+        <Button color="secondary" size="small" onClick={()=> {navigate(`/my-hotels/${props.hotelId}/${props.name}/images`)}}>Manage Images</Button>
 
       </CardActions>
     </Card>

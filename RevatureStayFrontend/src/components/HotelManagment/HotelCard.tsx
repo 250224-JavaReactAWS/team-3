@@ -13,21 +13,21 @@ function HotelCard(props: IHotel) {
   const firstElement: string | undefined = images.length > 0 ? images[0].url : undefined;
 
 
-  
-
-  let getImageByHotelId = async () => {
-    try {
-      let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
-      setImages(res.data)
-    } catch (error){
-      console.error("Error fetching hotel images ", error)
+  useEffect(() => {
+    let getImageByHotelId = async () => {
+      try {
+        let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
+        setImages(res.data)
+      } catch (error){
+        console.error("Error fetching hotel images ", error)
+      }
+      
     }
-    
-  }
+  
+    getImageByHotelId()
+  }, [])
 
-  getImageByHotelId()
-    
-
+  
   return (
     <Card 
       sx={{ maxWidth: 345 }}

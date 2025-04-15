@@ -10,7 +10,7 @@ import { InImage } from '../../../interfaces/InImage';
 import { Typography } from '@mui/material';
 
 
-export default function TitlebarImageList(props: {hotelId: any}) {
+export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImages: boolean}) {
 
     const [images, setImages] = useState<InImage[]>([])
     const [shouldUpdate, setShouldUpdate] = useState(false)
@@ -29,7 +29,7 @@ export default function TitlebarImageList(props: {hotelId: any}) {
 
         getAllImages()
 
-    },[shouldUpdate])
+    },[props.shouldUpdateImages])
 
 
         
