@@ -15,6 +15,7 @@ import IUser from '../../interfaces/iUser';
 import axios from 'axios';
 import { authContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
+import { URL } from '../../util/path';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -60,13 +61,11 @@ export default function Login() {
 
   let login = async () => {
     try {
-      let res = await axios.post<IUser>('http://localhost:8080/users/login',
+      await axios.post<IUser>(`${URL}/users/login`,
         { email, password },
         { withCredentials: true }
       );
-      console.log(res);
       navigate('/');
-
       setError(false);
     } catch (err) {
       console.log(err);

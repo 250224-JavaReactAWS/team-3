@@ -16,6 +16,7 @@ import axios from 'axios';
 import { authContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import { FormControlLabel, Switch } from '@mui/material';
+import { URL } from '../../util/path';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -66,8 +67,8 @@ export default function Register() {
   let register = async () => {
     try {
       const role = roleBool ? "OWNER" : "CUSTOMER";
-      let res = await axios.post<IUser>('http://localhost:8080/users/register',
-        { firstName, lastName, email, password, role },
+      let res = await axios.post<IUser>(`${URL}/users/register`,
+        { firstName, lastName,  email, password, role },
         { withCredentials: true }
       )
       roleReference?.setRole(res.data.role);
@@ -75,6 +76,7 @@ export default function Register() {
 
     } catch (err) {
       roleReference?.setRole("UNAUTHENTICATED")
+      console.log(err);
     }
   }
 

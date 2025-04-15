@@ -17,6 +17,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import ReservationDisplayer from "./components/reservations/viewReservation/ReservationDisplayer";
 import CreateReservationDisplayer from "./components/reservations/createReservation/CreateReservationDisplayer";
 import ReservationsList from "./components/reservations/viewMyReservations/ReservationsList";
+import { URL } from "./util/path";
 
 
 export interface AuthContextType {
@@ -30,7 +31,9 @@ export default function App() {
   const [role, setRole] = useState<"CUSTOMER" | "OWNER" | "UNAUTHENTICATED">("UNAUTHENTICATED");
 
   useEffect(() => {
-    axios.get<"CUSTOMER" | "OWNER">("http://localhost:8080/users/session", { withCredentials: true })
+    axios.get<"CUSTOMER" | "OWNER">(
+      `${ URL }/users/session`, { withCredentials: true }
+    )
       .then(res => {
         setRole(res.data)
         console.log(res);
