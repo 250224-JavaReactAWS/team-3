@@ -5,6 +5,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 import iReservation from "../../../interfaces/iReservation";
 import { useNavigate } from "react-router-dom";
+import {URL} from "../../../util/path";
 
 interface IReservationDetails{
     reservationId: number,
@@ -42,7 +43,7 @@ function ReservationDetails({reservationId, checkInDate, checkOutDate, numGuests
 
     const sendPutRequest = async (data : iReservation) => {
         try{
-            let res = await axios.put<iReservation>(`http://localhost:8080/reservations/${reservationId}`,
+            let res = await axios.put<iReservation>(`${URL}/reservations/${reservationId}`,
                 data,
                 {withCredentials: true}
             )
@@ -94,7 +95,7 @@ function ReservationDetails({reservationId, checkInDate, checkOutDate, numGuests
 
     const cancelHandler = async () => {
         try{
-            let res = await axios.patch<iReservation>(`http://localhost:8080/reservations/${reservationId}`,
+            let res = await axios.patch<iReservation>(`${URL}/reservations/${reservationId}`,
                 {status:"CANCELLED"},
                 {withCredentials: true}
             )

@@ -4,6 +4,7 @@ import ListedReservation from "./ListedReservation";
 import ReservationListHeader from "./ReservationListHeader";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {URL} from "../../../util/path";
 
 function ReservationsList(){
     const [reservations, setReservations] = useState<iReservation[]>([]);
@@ -13,7 +14,7 @@ function ReservationsList(){
     
         let getHotel = async () => {
             try{
-                let res = await axios.get<iReservation[]>(`http://localhost:8080/reservations`, {withCredentials:true})
+                let res = await axios.get<iReservation[]>(`${URL}/reservations`, {withCredentials:true})
                 setReservations(res.data)
             } catch (error){
                 if (axios.isAxiosError(error)) {

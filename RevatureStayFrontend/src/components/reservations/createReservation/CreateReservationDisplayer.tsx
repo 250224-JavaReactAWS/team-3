@@ -6,6 +6,7 @@ import { Box, CircularProgress } from "@mui/material";
 import CreateReservation from "./CreateReservation";
 import { authContext, AuthContextType } from "../../../App";
 import Error from "../../utils/Error";
+import {URL} from "../../../util/path";
 
 function CreateReservationDisplayer(){
     const [error, setError] = useState<string>("");
@@ -24,7 +25,7 @@ function CreateReservationDisplayer(){
         
         let getHotel = async () => {
             try{
-                let res = await axios.get<IHotel>(`http://localhost:8080/hotels/${hotelId}`)
+                let res = await axios.get<IHotel>(`${URL}/hotels/${hotelId}`)
                 setHotel(res.data)
             } catch (error){
                 if (axios.isAxiosError(error)) {
