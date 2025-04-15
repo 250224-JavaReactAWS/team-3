@@ -61,11 +61,14 @@ export default function Login() {
 
   let login = async () => {
     try {
-      await axios.post<IUser>(`${URL}/users/login`,
+      let res = await axios.post<IUser>(
+        `${URL}/users/login`,
         { email, password },
         { withCredentials: true }
       );
       navigate('/');
+      console.log(res)
+      roleReference?.setRole(res.data.role);
       setError(false);
     } catch (err) {
       console.log(err);
