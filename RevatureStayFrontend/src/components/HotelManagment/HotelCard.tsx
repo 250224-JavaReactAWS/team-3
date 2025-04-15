@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { InImage } from "../../interfaces/InImage"
 import axios from "axios"
 import { useNavigate } from "react-router"
+import { URL } from "../../util/path"
 
 function HotelCard(props: IHotel) {
 
@@ -16,7 +17,7 @@ function HotelCard(props: IHotel) {
   useEffect(() => {
     let getImageByHotelId = async () => {
       try {
-        let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`)
+        let res = await axios.get<InImage[]>(`${URL}/hotels/${props.hotelId}/images`)
         setImages(res.data)
       } catch (error){
         console.error("Error fetching hotel images ", error)

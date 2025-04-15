@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { InImage } from '../../../interfaces/InImage';
 import { Typography } from '@mui/material';
+import { URL } from '../../../util/path';
 
 
 export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImages: boolean}) {
@@ -19,7 +20,7 @@ export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImag
         
         let getAllImages = async() =>{
             try{
-                let res = await axios.get<InImage[]>(`http://localhost:8080/hotels/${props.hotelId}/images`, {withCredentials: true}) 
+                let res = await axios.get<InImage[]>(`${URL}/hotels/${props.hotelId}/images`, {withCredentials: true}) 
                 setImages(res.data)
                 console.log(res)
             }catch (error){
@@ -37,7 +38,7 @@ export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImag
 
         console.log(imageId)
         try{
-            let res = await axios.delete(`http://localhost:8080/hotels/${props.hotelId}/images/${imageId}`)
+            let res = await axios.delete(`${URL}/hotels/${props.hotelId}/images/${imageId}`)
             console.log(res)
             
         }catch(error){

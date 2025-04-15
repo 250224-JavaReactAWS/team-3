@@ -3,7 +3,7 @@ import { Button, Fab, Typography } from "@mui/material"
 import ImageContainer from "./ImageContainer"
 import { useNavigate, useParams } from "react-router-dom"
 import ImgFormDialog from "./NewImageDialog"
-import { createContext, useContext, useState } from "react"
+import { useState } from "react"
 
 
 function Images() {
