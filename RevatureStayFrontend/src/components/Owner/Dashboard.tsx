@@ -6,6 +6,7 @@ import axios from 'axios'
 import HotelCardOwner from '../HotelManagment/HotelCardOwner'
 import { Add } from '@mui/icons-material'
 import HotelFormDialog from '../HotelManagment/NewHotelDialog'
+import { URL } from '../../util/path'
 
 
 function dashboard() {
@@ -35,7 +36,7 @@ function dashboard() {
     useEffect(() => {
         let getMyHotels = async() =>{
             try{
-                let res = await axios.get<IHotel[]>("http://localhost:8080/hotels/my-hotels", 
+                let res = await axios.get<IHotel[]>(`${URL}/hotels/my-hotels`, 
                     {withCredentials: true}
                 )
                 setMyHotels(res.data)
