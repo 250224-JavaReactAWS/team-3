@@ -3,6 +3,7 @@ import iRoom from "../../../interfaces/iRoom";
 import Room from "./Room";
 import { useState } from "react";
 import axios from "axios";
+import {URL} from "../../../util/path";
 
 interface IRoomSection{
     rooms : iRoom[],
@@ -17,7 +18,7 @@ function RoomSection({rooms, reservationId, setRooms}: IRoomSection){
 
     const handleDelete =async (roomId:number) => {
         try{
-            let res = await axios.delete<any>(`http://localhost:8080/reservations/${reservationId}/rooms/${roomId}`,
+                await axios.delete<any>(`${URL}/reservations/${reservationId}/rooms/${roomId}`,
                 {withCredentials: true}
             )
             let newRooms:iRoom[] = rooms.filter((room) => room.roomId !== roomId)
@@ -35,7 +36,7 @@ function RoomSection({rooms, reservationId, setRooms}: IRoomSection){
 
     const handleAdd = async (value:string) => {
         try{
-            let res = await axios.post<iRoom>(`http://localhost:8080/reservations/${reservationId}/rooms`,
+            let res = await axios.post<iRoom>(`${URL}/reservations/${reservationId}/rooms`,
                 {type:value.toUpperCase()},
                 {withCredentials: true}
             )

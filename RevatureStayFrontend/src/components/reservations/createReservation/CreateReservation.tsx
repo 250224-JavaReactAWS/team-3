@@ -9,6 +9,7 @@ import iRoom from "../../../interfaces/iRoom";
 import axios from "axios";
 import iReservation from "../../../interfaces/iReservation";
 import { useNavigate } from "react-router";
+import {URL} from "../../../util/path";
 
 interface ICreateReservation{
     hotel : IHotel
@@ -43,7 +44,7 @@ function CreateReservation({hotel} : ICreateReservation){
 
     const sendPostRequest = async (data : iReservation) => {
         try{
-            let res = await axios.post<iReservation>('http://localhost:8080/reservations',
+            let res = await axios.post<iReservation>(`${URL}/reservations`,
               data,
               {withCredentials: true}
             )

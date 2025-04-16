@@ -6,6 +6,7 @@ import { Box, CircularProgress } from "@mui/material";
 import Reservation from "./Reservation";
 import { AuthContextType, authContext } from "../../../App";
 import OwnedReservation from "./OwnedReservation";
+import {URL} from "../../../util/path";
 
 function ReservationDisplayer(){
     const {reservationId} = useParams<{reservationId: string}>();
@@ -41,7 +42,7 @@ function ReservationDisplayer(){
         
         let getReservation = async () => {
             try{
-                let res = await axios.get<iReservation>(`http://localhost:8080/reservations/${reservationId}`, {withCredentials:true})
+                let res = await axios.get<iReservation>(`${URL}/reservations/${reservationId}`, {withCredentials:true})
                 setReservation(res.data)
               } catch (error){
                 if (axios.isAxiosError(error)) {

@@ -1,9 +1,10 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, Snackbar, TextField, Typography } from "@mui/material";
+import { Alert, Button, Dialog, DialogContent, DialogTitle, Grid, Paper, Snackbar, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import axios from "axios";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs  from "dayjs";
 import { useState } from "react";
 import iReservation from "../../../interfaces/iReservation";
+import {URL} from "../../../util/path";
 
 interface IReservationDetails{
     reservationId: number,
@@ -14,7 +15,7 @@ interface IReservationDetails{
     setSuccess: (value:boolean)=>void
 }
 
-function OwnedReservationDetails({reservationId, checkInDate, checkOutDate, numGuests, status, setSuccess} : IReservationDetails){
+function OwnedReservationDetails({reservationId, checkInDate, checkOutDate, numGuests, status} : IReservationDetails){
     const [error, setError] = useState<String>("");
     const [actionResponse, setActionResponse] =useState<String>("");
     const [statusS, setStatusS] = useState<string>(status);
@@ -22,7 +23,7 @@ function OwnedReservationDetails({reservationId, checkInDate, checkOutDate, numG
 
     const sendPatchRequest = async (data : string) => {
         try{
-            let res = await axios.patch<iReservation>(`http://localhost:8080/reservations/${reservationId}`,
+            let res = await axios.patch<iReservation>(`${URL}/reservations/${reservationId}`,
                 {status:data},
                 {withCredentials: true}
             )

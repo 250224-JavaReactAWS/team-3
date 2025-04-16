@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IHotel } from "../../../interfaces/IHotel";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import CreateReservation from "./CreateReservation";
+import { authContext, AuthContextType } from "../../../App";
+import Error from "../../utils/Error";
+import {URL} from "../../../util/path";
 
 function CreateReservationDisplayer(){
     const [error, setError] = useState<string>("");
     const [hotel, setHotel] = useState<IHotel|null>(null);
     const {hotelId} = useParams<{hotelId: string}>();
-
+    const roleReference = useContext<AuthContextType|null>(authContext);
     const defaultHotel : IHotel = {
         hotelId: 0,
         name: "",
@@ -17,12 +20,11 @@ function CreateReservationDisplayer(){
         cellphoneNumber:  "",
         description: "",
     }
-
     useEffect(() => {   
-    
+        
         let getHotel = async () => {
             try{
-                let res = await axios.get<IHotel>(`http://localhost:8080/hotels/${hotelId}`)
+                let res = await axios.get<IHotel>(`${URL}/hotels/${hotelId}`)
                 setHotel(res.data)
             } catch (error){
                 if (axios.isAxiosError(error)) {
@@ -33,7 +35,6 @@ function CreateReservationDisplayer(){
                 }    
             }
         }
-        
         getHotel();
     },[])
 
@@ -55,14 +56,22 @@ function CreateReservationDisplayer(){
 
     if(error){
         return (
-            <div style={{ textAlign: 'center', marginTop: '50px' }}>
-              <p>{error}</p>
-            </div>
+            <Error message = {error}/>
         );
     }
 
+    if(roleReference?.role === "CUSTOMER"){
+        return(
+            <CreateReservation hotel={hotel ?? defaultHotel}/>
+        );
+    }
+    if(roleReference?.role === "OWNER"){
+        return(
+            <Error message="Sorry, hotel owners are not allowed to make reservations"/>
+        );
+    }
     return(
-        <CreateReservation hotel={hotel ?? defaultHotel}/>
+        <Navigate to={"/login"}/>
     );
 }
 

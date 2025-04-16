@@ -2,7 +2,6 @@ import { Container, Grid, Paper, Snackbar, Typography } from "@mui/material";
 import iReservation from "../../../interfaces/iReservation";
 import UserSection from "./UserSection";
 import HotelSection from "./HotelSection";
-import ReservationDetails from "./ReservationDetail";
 import RoomSection from "./RoomSection";
 import { useState } from "react";
 import iRoom from "../../../interfaces/iRoom";

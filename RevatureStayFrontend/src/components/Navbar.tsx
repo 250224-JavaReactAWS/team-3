@@ -15,6 +15,7 @@ import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { authContext } from '../App';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { URL } from '../util/path';
 
 export default function Navbar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -41,7 +42,7 @@ export default function Navbar() {
 
   const logout = async () => {
     try {
-      let res = await axios.post<any>('http://localhost:8080/users/logout', { withCredentials: true }
+      let res = await axios.post<any>(`${URL}/users/logout`, { withCredentials: true }
       );
       console.log(res);
       navigate('/');
