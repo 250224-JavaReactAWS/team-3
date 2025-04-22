@@ -1,9 +1,11 @@
-import { Card, CardMedia, CardContent, Typography, CardActions, Button } from "@mui/material"
+import { Card, CardMedia, CardContent, Typography, CardActions, Button, IconButton, Tooltip, Box } from "@mui/material"
 import { IHotel } from "../../interfaces/IHotel"
 import { useNavigate } from "react-router"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { InImage } from "../../interfaces/InImage"
+import { Delete, Edit } from "@mui/icons-material"
+import { URL } from "../../util/path"
 
 function HotelCardOwner(props: IHotel) {
 
@@ -19,6 +21,7 @@ function HotelCardOwner(props: IHotel) {
       try {
         let res = await axios.get<InImage[]>(`${URL}/hotels/${props.hotelId}/images`)
         setImages(res.data)
+        console.log(res)
       } catch (error){
         console.error("Error fetching hotel images ", error)
       }
@@ -47,7 +50,20 @@ function HotelCardOwner(props: IHotel) {
       <CardActions>
         <Button color="secondary" size="small" onClick={()=> {navigate(`/my-hotels/${props.hotelId}/${props.name}/rooms`)}}>Manage Rooms</Button>
         <Button color="secondary" size="small" onClick={()=> {navigate(`/my-hotels/${props.hotelId}/${props.name}/images`)}}>Manage Images</Button>
-
+        
+        <Box>
+          <Tooltip title="Edit">
+            <IconButton>
+              <Edit color="secondary" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton>
+              <Delete color="error" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        
       </CardActions>
     </Card>
   )

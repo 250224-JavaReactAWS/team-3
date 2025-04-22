@@ -9,12 +9,15 @@ import { useEffect, useState } from 'react';
 import { InImage } from '../../../interfaces/InImage';
 import { Typography } from '@mui/material';
 import { URL } from '../../../util/path';
+import DeleteImageDialog from './DeleteImageDialog';
 
 
 export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImages: boolean}) {
 
     const [images, setImages] = useState<InImage[]>([])
     const [shouldUpdate, setShouldUpdate] = useState(false)
+    const [openDelete, setOpenDelete] = useState(false)
+    const [deleteImg, setDeleteImg] = useState(false)
 
     useEffect(() => {
         
@@ -30,26 +33,27 @@ export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImag
 
         getAllImages()
 
-    },[props.shouldUpdateImages])
+    },[props.shouldUpdateImages, shouldUpdate])
 
 
-        
     let deleteImage = async (imageId: any) =>{
 
         console.log(imageId)
         try{
-            let res = await axios.delete(`${URL}/hotels/${props.hotelId}/images/${imageId}`)
+            let res = await axios.delete(`${URL}/hotels/${props.hotelId}/images/${imageId}`, {withCredentials: true})
             console.log(res)
             
         }catch(error){
             console.error("Could not delete the image", error)
         }
         setShouldUpdate(!shouldUpdate)
-
+        
     }
 
+    const handleDeleteClose = () => {
+        setOpenDelete(false)
+    }
 
-    
 
     return (
         <>
@@ -72,7 +76,8 @@ export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImag
                     <IconButton
                         sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
                         aria-label={`info about ${item.alt}`}
-                        onClick={() => deleteImage(item.image_id)}
+                        onClick={() => setOpenDelete(true)}
+                        //onClick={() => deleteImage(item.image_id)}
                     >
                         <Delete />
                     </IconButton>
@@ -86,6 +91,10 @@ export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImag
         {
             images.length === 0 && 
             <Typography variant='h3' color='error' fontSize={26} marginTop={15}>Ups there are not any images here! Add one</Typography>
+        }
+
+        {
+            openDelete && <DeleteImageDialog open={openDelete} handleClose = {handleDeleteClose} />
         }
         </>
     );
