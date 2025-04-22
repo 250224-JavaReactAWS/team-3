@@ -1,0 +1,102 @@
+
+/*
+   Clone the repo of the app
+   Builds the React app
+   Copies the frontend into the Spring Boot static folder
+   Since I gitignore application.properties. I need to inject application.properties from Jenkins credentials as a secret file.
+   Builds the Spring Boot JAR
+   Copies everything needed (including Dockerfile and backend code) to the EC2 instance
+   Remotely builds the Docker image and runs the container
+*/
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "revstay"
+        CONTAINER_NAME = "crisscuautzo/revstay"
+        EC2_HOST = "ec2-user@3.145.87.142"
+        DB_URL='jdbc:postgresql://revstay.cx6u4sk4uc9r.us-east-2.rds.amazonaws.com:5432/postgres'
+        DB_USERNAME='revstay'
+        DB_PASSWORD=credentials('db-password')
+    }
+
+    stages {
+        stage('Clone Repo') {
+            steps {
+                dir('revstay') {
+                        git url: 'https://github.com/250224-JavaReactAWS/team-3.git',       branch: 'main'
+                }
+            }
+        }
+
+        stage('Build React App') {
+            steps {
+                dir('revstay/RevatureStayFrontend') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Copy Frontend into Spring Static Folder') {
+            steps {
+                sh 'rm -rf revstay/RevatureStay/src/main/resources/static/*'
+                sh 'cp -r  revstay/RevatureStayFrontend/dist/* backend/src/main/resources/static/'
+            }
+        }
+
+
+        stage('Build Spring Boot JAR') {
+            steps {
+                dir('revstay/RevatureStay') {
+                    sh 'mvn clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Copy Project to EC2') {
+            steps {
+                withCredentials([file(credentialsId: 'ec2-ssh-key', variable: 'EC2_KEY')]) {
+                    sh '''
+                        chmod 400 $EC2_KEY
+                        ssh -o StrictHostKeyChecking=no -i $EC2_KEY ec2-user@3.145.87.142 "mkdir -p revsaty-app"
+                        scp -o StrictHostKeyChecking=no -i $EC2_KEY revstay/RevatureStay/Dockerfile ec2-user@3.145.87
+                        .142:/home/ec2-user/revstay-app/
+                        scp -o StrictHostKeyChecking=no -i $EC2_KEY revstay/RevatureStay/target/RevatureStay-0.0.1-SNAPSHOT.jar
+                        ec2-user@3.145.87.142:/home/ec2-user/revstay-app/
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy Docker Container on EC2') {
+            steps {
+                withCredentials([file(credentialsId: 'ec2-ssh-key', variable: 'EC2_KEY')]) {
+                    sh '''#!/bin/bash
+ssh -o StrictHostKeyChecking=no -i $EC2_KEY ec2-user@3.145.87.142 <<EOF
+    echo "🔎 Checking for process using port 8080..."
+    PID=\$(lsof -t -i:8080 2>/dev/null)
+    if [ ! -z "\$PID" ]; then
+        echo "🔫 Killing process using port 8080 (PID: \$PID)"
+        kill -9 \$PID
+    fi
+
+    echo "📦 Deploying new container..."
+    cd revstay-app
+    docker stop revstay-container || true
+    docker rm revstay-container || true
+    docker build -t revstay-app .
+    docker run -d -p 8080:8080 --name revstay-container revstay-app
+EOF
+'''
+                }
+            }
+        }
+
+        stage('Done') {
+            steps {
+                echo "✅ App deployed successfully at http://3.145.87.142:8080"
+            }
+        }
+    }
+}
