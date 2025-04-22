@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
 @RequestMapping("reservations")
-@CrossOrigin(origins = {"http://localhost:5173"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://revature-example-bucket.s3-website-us-east-1.amazonaws.com"}, allowCredentials = "true")
 public class ReservationController {
     private final ReservationServices reservationServices;
 

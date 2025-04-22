@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("users")
-@CrossOrigin(origins = {"http://localhost:5173"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://revature-example-bucket.s3-website-us-east-1.amazonaws.com"}, allowCredentials = "true")
 public class UserController {
   private final UserService userService;
   private final Logger logger = LoggerFactory.getLogger(UserController.class);
