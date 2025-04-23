@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 import { ChangeEvent } from 'react';
+import { URL } from '../../util/path';
 
 
 export default function HotelFormDialog(props: {open:boolean, onClose: () => void, updateHotels: () => void }) {
@@ -28,7 +29,7 @@ export default function HotelFormDialog(props: {open:boolean, onClose: () => voi
             onSubmit:async (event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
               try{
-                let res = await axios.post<{name: string, address: string, cellphoneNumber: string, description: string}>(`http://localhost:8080/hotels`, 
+                let res = await axios.post<{name: string, address: string, cellphoneNumber: string, description: string}>(`${URL}/hotels`, 
                     {
                         name: name,
                         address: address,

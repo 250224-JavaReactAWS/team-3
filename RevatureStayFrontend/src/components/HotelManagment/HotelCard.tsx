@@ -5,6 +5,7 @@ import { InImage } from "../../interfaces/InImage"
 import axios from "axios"
 import { useNavigate } from "react-router"
 import { URL } from "../../util/path"
+import { Star } from "@mui/icons-material"
 
 function HotelCard(props: IHotel) {
 
@@ -47,9 +48,9 @@ function HotelCard(props: IHotel) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => {navigate(`/reservations/create/${props.hotelId}`)}}>Book Now!</Button>
-        <Button size="small" onClick={()=> {navigate(`/hotels/${props.hotelId}`)}}>View</Button>
-        <Button size="small">Add Favorites</Button>
+        <Button  size="small" onClick={() => {navigate(`/reservations/create/${props.hotelId}`)}}>Book Now!</Button>
+        <Button  size="small" onClick={()=> {navigate(`/hotels/${props.hotelId}`)}}>View</Button>
+        <Button  size="small"><Star/></Button>
       </CardActions>
     </Card>
   )

@@ -46,7 +46,7 @@ function Images() {
 
     {/* Render the ImgFormDialog component conditionally */}
     {open && <ImgFormDialog hotelId={hotelId} open={open} onClose={handleClose} updateImages={updateImages} /> }
-  
+    
     </>
   )
 }
