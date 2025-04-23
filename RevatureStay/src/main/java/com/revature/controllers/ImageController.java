@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("hotels/{hotelId}/images")
-@CrossOrigin(origins = {"http://revature-example-bucket.s3-website-us-east-1.amazonaws.com"}, allowCredentials = "true")
 public class ImageController {
 
     private final ImageService imageService;
