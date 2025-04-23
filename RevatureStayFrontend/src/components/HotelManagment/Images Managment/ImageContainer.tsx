@@ -15,9 +15,10 @@ import DeleteImageDialog from './DeleteImageDialog';
 export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImages: boolean}) {
 
     const [images, setImages] = useState<InImage[]>([])
-    const [shouldUpdate, setShouldUpdate] = useState(false)
+    // const [shouldUpdate, setShouldUpdate] = useState(false)
+    const [shouldUpdate] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
-    const [deleteImg, setDeleteImg] = useState(false)
+    // const [deleteImg, setDeleteImg] = useState(false)
 
     useEffect(() => {
         
@@ -36,7 +37,7 @@ export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImag
     },[props.shouldUpdateImages, shouldUpdate])
 
 
-    let deleteImage = async (imageId: any) =>{
+    /* let deleteImage = async (imageId: any) =>{
 
         console.log(imageId)
         try{
@@ -48,7 +49,7 @@ export default function TitlebarImageList(props: {hotelId: any, shouldUpdateImag
         }
         setShouldUpdate(!shouldUpdate)
         
-    }
+    }*/
 
     const handleDeleteClose = () => {
         setOpenDelete(false)
