@@ -66,12 +66,13 @@ export default function Login() {
         { email, password },
         { withCredentials: true }
       );
-      navigate('/');
-      console.log(res)
       roleReference?.setRole(res.data.role);
       setError(false);
+      if(roleReference?.role == "OWNER") {
+        navigate('/my-hotels');
+      }
+      navigate("/")
     } catch (err) {
-      console.log(err);
       roleReference?.setRole("UNAUTHENTICATED")
       setError(true);
     }

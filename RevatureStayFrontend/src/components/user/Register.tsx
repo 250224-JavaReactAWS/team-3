@@ -72,6 +72,9 @@ export default function Register() {
         { withCredentials: true }
       )
       roleReference?.setRole(res.data.role);
+      if(roleReference?.role == "OWNER") {
+        navigate('/my-hotels');
+      }
       navigate('/');
     } catch (err) {
       roleReference?.setRole("UNAUTHENTICATED")
