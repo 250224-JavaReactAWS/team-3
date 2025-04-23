@@ -9,7 +9,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Apply to all endpoints
-                .allowedOrigins("http://hotel-reservation-front.s3-website.us-east-2.amazonaws.com")
+                .allowedOrigins("http://revature-example-bucket.s3-website-us-east-1.amazonaws.com/")
                 .allowCredentials(true)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Specify allowed HTTP methods
                 .allowedHeaders("*") // Allow all headers
